@@ -1,4 +1,4 @@
-import '../features/athletes/presentation/athlete_form_page.dart';
+import '../features/athletes/presentation/pages/athlete_form_page.dart';
 
 class AppRoutes {
 

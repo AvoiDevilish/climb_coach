@@ -87,7 +87,7 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
 
 
             DropdownButtonFormField<String>(
-              value: gender,
+             initialValue: gender,
               decoration: const InputDecoration(
                 labelText: 'جنسیت',
                 border: OutlineInputBorder(),

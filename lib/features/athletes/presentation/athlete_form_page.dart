@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:climb_coach/features/athletes/domain/models/athlete.dart';
+import 'package:climb_coach/features/athletes/data/repositories/athlete_repository.dart';
 
 class AthleteFormPage extends StatefulWidget {
   const AthleteFormPage({super.key});
@@ -9,17 +11,19 @@ class AthleteFormPage extends StatefulWidget {
 
 class _AthleteFormPageState extends State<AthleteFormPage> {
 
-  final nameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final ageController = TextEditingController();
   final heightController = TextEditingController();
   final weightController = TextEditingController();
   final pullUpController = TextEditingController();
-
+  final AthleteRepository _repository = AthleteRepository();
   String gender = 'مرد';
 
   @override
   void dispose() {
-    nameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     ageController.dispose();
     heightController.dispose();
     weightController.dispose();
@@ -29,7 +33,8 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
 
 
   void clearForm() {
-    nameController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
     ageController.clear();
     heightController.clear();
     weightController.clear();
@@ -41,13 +46,29 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
   }
 
 
-  void saveAthlete() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('اطلاعات ورزشکار ثبت شد'),
-      ),
-    );
-  }
+  Future<void> saveAthlete() async {
+
+  final athlete = Athlete(
+    firstName: firstNameController.text.trim(),
+    lastName: lastNameController.text.trim(),
+    age: int.tryParse(ageController.text),
+    height: double.tryParse(heightController.text),
+    weight: double.tryParse(weightController.text),
+    gender: gender,
+);
+   
+
+  await _repository.insertAthlete(athlete);
+
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('اطلاعات ورزشکار ثبت شد'),
+    ),
+  );
+
+}
 
 
   @override
@@ -63,15 +84,21 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
         child: Column(
           children: [
 
-            TextField(
-              controller: nameController,
+            TextFormField(
+              controller: firstNameController,
               decoration: const InputDecoration(
-                labelText: 'نام ورزشکار',
-                border: OutlineInputBorder(),
+                labelText: 'نام',
               ),
             ),
 
             const SizedBox(height: 12),
+
+            TextFormField(
+              controller: lastNameController,
+              decoration: const InputDecoration(
+                labelText: 'نام خانوادگی',
+              ),
+            ),
 
 
             TextField(

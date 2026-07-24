@@ -1,6 +1,8 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'tables.dart';
+import 'create_tables.dart';
 
 class DatabaseHelper {
   DatabaseHelper._();
@@ -22,19 +24,25 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     final directory = await getApplicationDocumentsDirectory();
 
-    final path = join(directory.path, 'climb_coach.db');
+    final path = join(
+  directory.path,
+  Tables.databaseName,
+);
 
     return await openDatabase(
       path,
-      version: 1,
+      version: Tables.databaseVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    // جداول در مرحله بعد ساخته می‌شوند.
-  }
+  Future<void> _onCreate(
+  Database db,
+  int version,
+) async {
+  await db.execute(CreateTables.createAthletesTable);
+}
 
   Future<void> _onUpgrade(
     Database db,

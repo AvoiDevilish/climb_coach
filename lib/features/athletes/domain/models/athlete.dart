@@ -1,23 +1,21 @@
 class Athlete {
-  final int? id;
+  final String? id;
 
   final String firstName;
   final String lastName;
 
-  final int? age;
-  final double? height;
-  final double? weight;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  final String? gender;
+  final bool isDeleted;
 
   Athlete({
     this.id,
     required this.firstName,
     required this.lastName,
-    this.age,
-    this.height,
-    this.weight,
-    this.gender,
+    this.createdAt,
+    this.updatedAt,
+    this.isDeleted = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,22 +23,26 @@ class Athlete {
       'id': id,
       'first_name': firstName,
       'last_name': lastName,
-      'age': age,
-      'height': height,
-      'weight': weight,
-      'gender': gender,
+      'created_at':
+          (createdAt ?? DateTime.now()).toIso8601String(),
+      'updated_at':
+          (updatedAt ?? DateTime.now()).toIso8601String(),
+      'is_deleted': isDeleted ? 1 : 0,
     };
   }
 
   factory Athlete.fromMap(Map<String, dynamic> map) {
     return Athlete(
-      id: map['id'],
-      firstName: map['first_name'],
-      lastName: map['last_name'],
-      age: map['age'],
-      height: map['height']?.toDouble(),
-      weight: map['weight']?.toDouble(),
-      gender: map['gender'],
+      id: map['id']?.toString(),
+      firstName: map['first_name'] ?? '',
+      lastName: map['last_name'] ?? '',
+      createdAt: map['created_at'] != null
+          ? DateTime.parse(map['created_at'])
+          : null,
+      updatedAt: map['updated_at'] != null
+          ? DateTime.parse(map['updated_at'])
+          : null,
+      isDeleted: (map['is_deleted'] ?? 0) == 1,
     );
   }
 }

@@ -6,12 +6,13 @@ class AthleteRepository {
   Future<int> insertAthlete(Athlete athlete) async {
     final db = await DatabaseHelper.instance.database;
 
-    return await db.insert(
+    return db.insert(
       Tables.athletes,
       athlete.toMap(),
     );
   }
-  Future<List<Athlete>> getAthletes() async {
+
+  Future<List<Athlete>> getAllAthletes() async {
     final db = await DatabaseHelper.instance.database;
 
     final result = await db.query(
@@ -21,6 +22,4 @@ class AthleteRepository {
 
     return result.map((e) => Athlete.fromMap(e)).toList();
   }
-
-
 }

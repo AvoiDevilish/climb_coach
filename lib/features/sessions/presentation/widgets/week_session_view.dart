@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pages/session_detail_page.dart';
+
 import '../../domain/models/session.dart';
 
 import '../../../../core/calendar/calendar_helper.dart';
@@ -139,13 +141,27 @@ class WeekSessionView extends StatelessWidget {
 
                     return ListTile(
 
-                        title:
-                            Text(session.title),
+                      title:
+                          Text(session.title),
 
-                        subtitle:
-                            Text(
+                      subtitle:
+                          Text(
                             '${session.startTime} تا ${session.endTime}',
-                            ),
+                          ),
+
+                      onTap: () {
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                SessionDetailPage(
+                                  session: session,
+                                ),
+                          ),
+                        );
+
+                      },
 
                     );
 

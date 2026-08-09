@@ -3,7 +3,7 @@ import 'package:climb_coach/core/database/tables.dart';
 
 import '../../domain/models/session_member_detail.dart';
 import '../../domain/models/session_member.dart';
-
+import '../../../sessions/domain/models/session_summary.dart';
 
 class SessionMemberRepository {
 
@@ -225,6 +225,27 @@ class SessionMemberRepository {
 
 
     return result.first['count'] as int;
+    }
+
+    Future<SessionSummary> getSessionSummary(
+    String sessionId,
+    int capacity,
+    ) async {
+
+    final activeMembers =
+        await getActiveMemberCount(
+            sessionId,
+        );
+
+
+    return SessionSummary(
+
+        capacity: capacity,
+
+        activeMembers: activeMembers,
+
+    );
+
     }
 
 }

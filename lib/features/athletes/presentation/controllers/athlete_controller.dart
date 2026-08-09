@@ -19,4 +19,47 @@ class AthleteController extends ChangeNotifier {
     await _repository.insertAthlete(athlete);
     await loadAthletes();
   }
+
+  Future<bool> athleteExists(
+    String firstName,
+    String lastName,
+  ) async {
+    return await _repository.athleteExists(
+      firstName,
+      lastName,
+    );
+  }
+
+  Future<Athlete?> getAthlete(String id) async {
+    return _repository.getAthlete(id);
+  }
+
+
+  Future<void> updateAthlete(Athlete athlete) async {
+
+    debugPrint(
+      'UPDATE ATHLETE ID: ${athlete.id}',
+    );
+
+    debugPrint(
+      'UPDATE IMAGE: ${athlete.profileImage}',
+    );
+
+
+    final result =
+        await _repository.updateAthlete(
+          athlete,
+        );
+
+    debugPrint(
+      'UPDATE ATHLETE ID: ${athlete.id}',
+    );
+
+    debugPrint(
+      'UPDATE RESULT ROWS: $result',
+    );
+
+
+    await loadAthletes();
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'athlete_avatar_picker.dart';
+
 class AthleteForm extends StatelessWidget {
   const AthleteForm({
     super.key,
@@ -13,6 +15,9 @@ class AthleteForm extends StatelessWidget {
     required this.onGenderChanged,
     required this.onSave,
     required this.onClear,
+
+    required this.imagePath,
+    required this.onAvatarTap,
   });
 
   final TextEditingController firstNameController;
@@ -29,116 +34,83 @@ class AthleteForm extends StatelessWidget {
   final VoidCallback onSave;
   final VoidCallback onClear;
 
+  final String? imagePath;
+  final VoidCallback onAvatarTap;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
 
-        TextFormField(
-          controller: firstNameController,
-          decoration: const InputDecoration(
-            labelText: 'نام',
-          ),
-        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
 
-        const SizedBox(height: 12),
-
-        TextFormField(
-          controller: lastNameController,
-          decoration: const InputDecoration(
-            labelText: 'نام خانوادگی',
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        TextField(
-          controller: ageController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'سن',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        DropdownButtonFormField<String>(
-          initialValue: gender,
-          decoration: const InputDecoration(
-            labelText: 'جنسیت',
-            border: OutlineInputBorder(),
-          ),
-          items: const [
-            DropdownMenuItem(
-              value: 'مرد',
-              child: Text('مرد'),
-            ),
-            DropdownMenuItem(
-              value: 'زن',
-              child: Text('زن'),
-            ),
-          ],
-          onChanged: onGenderChanged,
-        ),
-
-        const SizedBox(height: 12),
-
-        TextField(
-          controller: heightController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'قد (سانتی متر)',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        TextField(
-          controller: weightController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'وزن (کیلوگرم)',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        TextField(
-          controller: pullUpController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'بارفیکس روزانه',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 24),
-
-        Row(
           children: [
 
-            Expanded(
-              child: ElevatedButton(
-                onPressed: onSave,
-                child: const Text('ذخیره'),
+            const Text(
+              "ثبت ورزشکار جدید",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
 
-            const SizedBox(width: 12),
+            const SizedBox(height: 24),
 
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onClear,
-                child: const Text('پاک کردن'),
+            Center(
+              child: AthleteAvatarPicker(
+                imagePath: imagePath,
+                onTap: onAvatarTap,
               ),
             ),
 
+            const SizedBox(height: 24),
+
+            TextFormField(
+              controller: firstNameController,
+              decoration: const InputDecoration(
+                labelText: "نام",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            TextFormField(
+              controller: lastNameController,
+              decoration: const InputDecoration(
+                labelText: "نام خانوادگی",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            Row(
+              children: [
+
+                Expanded(
+                  child: FilledButton(
+                    onPressed: onSave,
+                    child: const Text("ثبت ورزشکار"),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: onClear,
+                    child: const Text("پاک کردن"),
+                  ),
+                ),
+
+              ],
+            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

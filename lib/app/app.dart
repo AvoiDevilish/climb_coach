@@ -10,7 +10,7 @@ class ClimbCoachApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Climb Coach',
+      title: 'Eye Club',
       debugShowCheckedModeBanner: false,
 
       theme: AppTheme.light,

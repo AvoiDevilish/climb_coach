@@ -18,6 +18,9 @@ class AthleteBody extends StatelessWidget {
     required this.onGenderChanged,
     required this.onSave,
     required this.onClear,
+
+    required this.imagePath,
+    required this.onAvatarTap,
   });
 
   final AthleteController controller;
@@ -36,10 +39,14 @@ class AthleteBody extends StatelessWidget {
   final VoidCallback onSave;
   final VoidCallback onClear;
 
+  final String? imagePath;
+  final VoidCallback onAvatarTap;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
+
       child: Column(
         children: [
 
@@ -50,10 +57,15 @@ class AthleteBody extends StatelessWidget {
             heightController: heightController,
             weightController: weightController,
             pullUpController: pullUpController,
+
             gender: gender,
             onGenderChanged: onGenderChanged,
+
             onSave: onSave,
             onClear: onClear,
+
+            imagePath: imagePath,
+            onAvatarTap: onAvatarTap,
           ),
 
           const SizedBox(height: 24),

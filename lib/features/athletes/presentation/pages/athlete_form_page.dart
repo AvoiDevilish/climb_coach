@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../data/repositories/athlete_repository.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../domain/models/athlete.dart';
 import '../controllers/athlete_controller.dart';
 import '../widgets/athlete_body.dart';
@@ -13,7 +12,7 @@ class AthleteFormPage extends StatefulWidget {
 }
 
 class _AthleteFormPageState extends State<AthleteFormPage> {
-  final AthleteRepository _repository = AthleteRepository();
+  final AthleteController _controller = AthleteController();
   final AthleteController controller = AthleteController();
 
   final firstNameController = TextEditingController();
@@ -24,6 +23,8 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
   final pullUpController = TextEditingController();
 
   String gender = 'مرد';
+
+  String? selectedImagePath;
 
   @override
   void initState() {
@@ -66,25 +67,88 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
     weightController.clear();
     pullUpController.clear();
 
+    selectedImagePath = null;
+
     setState(() {
       gender = 'مرد';
     });
   }
 
-  Future<void> saveAthlete() async {
-    debugPrint('saveAthlete started');
-    final athlete = Athlete(
-      firstName: firstNameController.text.trim(),
-      lastName: lastNameController.text.trim(),
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+
+    final image = await picker.pickImage(
+      source: ImageSource.gallery,
     );
 
-    await _repository.insertAthlete(athlete);
+    if (image == null) return;
+
+    setState(() {
+      selectedImagePath = image.path;
+    });
+  }
+
+  Future<void> saveAthlete() async {
+    debugPrint('saveAthlete started');
+
+    final firstName =
+        firstNameController.text.trim();
+
+    final lastName =
+        lastNameController.text.trim();
+
+    if (firstName.isEmpty || lastName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "نام و نام خانوادگی الزامی است",
+          ),
+          backgroundColor: Colors.orange,
+        ),
+      );
+
+      return;
+    }
+
+    final exists =
+        await _controller.athleteExists(
+              firstName,
+              lastName,
+            );
+    if (!mounted) return;
+
+    if (exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "این ورزشکار قبلاً ثبت شده است",
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+      return;
+    }
+
+    final athlete = Athlete(
+      id: DateTime.now()
+          .millisecondsSinceEpoch
+          .toString(),
+
+      firstName: firstName,
+      lastName: lastName,
+      profileImage: selectedImagePath,
+    );
+
+    await _controller.addAthlete(athlete);
 
     await controller.loadAthletes();
 
     clearForm();
 
     if (!mounted) return;
+
+    FocusScope.of(context).unfocus();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -115,6 +179,9 @@ class _AthleteFormPageState extends State<AthleteFormPage> {
         },
         onSave: saveAthlete,
         onClear: clearForm,
+        imagePath: selectedImagePath,
+
+        onAvatarTap: pickImage,
       ),
     );
   }

@@ -42,6 +42,14 @@ class DatabaseHelper {
   int version,
 ) async {
   await db.execute(CreateTables.createAthletesTable);
+
+  await db.execute(CreateTables.createCustomFieldsTable);
+
+  await db.execute(CreateTables.createAthleteValuesTable);
+
+  await db.execute(CreateTables.createMovementCategoriesTable);
+
+  await db.execute(CreateTables.createMovementsTable);
 }
 
   Future<void> _onUpgrade(
@@ -49,6 +57,30 @@ class DatabaseHelper {
     int oldVersion,
     int newVersion,
   ) async {
-    // مهاجرت نسخه‌های بعدی
+
+    if (oldVersion < 2) {
+
+      await db.execute(
+        'ALTER TABLE athletes ADD COLUMN gender TEXT'
+      );
+
+      await db.execute(
+        'ALTER TABLE athletes ADD COLUMN age INTEGER'
+      );
+
+      await db.execute(
+        'ALTER TABLE athletes ADD COLUMN height REAL'
+      );
+
+      await db.execute(
+        'ALTER TABLE athletes ADD COLUMN weight REAL'
+      );
+
+      await db.execute(
+        'ALTER TABLE athletes ADD COLUMN profile_image TEXT'
+      );
+
+    }
+
   }
 }

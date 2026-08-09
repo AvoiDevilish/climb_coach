@@ -1,64 +1,92 @@
 import 'package:flutter/material.dart';
 
+import '../core/design/app_colors.dart';
+import '../core/design/app_radius.dart';
+import '../core/design/app_text_styles.dart';
+
 class AppTheme {
+  AppTheme._();
+
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
 
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.blueGrey,
-      ),
+      scaffoldBackgroundColor: AppColors.background,
 
-      scaffoldBackgroundColor: Colors.grey.shade50,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        primary: AppColors.primary,
+        secondary: AppColors.accent,
+        surface: AppColors.surface,
+      ),
 
       appBarTheme: const AppBarTheme(
-        centerTitle: true,
         elevation: 0,
+        centerTitle: true,
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        titleTextStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
 
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-
-        filled: true,
-        fillColor: Colors.white,
-
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
+      cardTheme: CardThemeData(
+        elevation: 3,
+        color: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            AppRadius.large,
+          ),
         ),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size(double.infinity, 52),
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(
+              AppRadius.medium,
+            ),
           ),
         ),
       ),
 
-      cardTheme: CardThemeData(
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            AppRadius.medium,
+          ),
+        ),
+
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            AppRadius.medium,
+          ),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            AppRadius.medium,
+          ),
+          borderSide: const BorderSide(
+            color: AppColors.primary,
+            width: 2,
+          ),
         ),
       ),
 
-      snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+      textTheme: const TextTheme(
+        headlineMedium: AppTextStyles.title,
+        titleLarge: AppTextStyles.headline,
+        bodyLarge: AppTextStyles.body,
+        bodyMedium: AppTextStyles.body,
+        bodySmall: AppTextStyles.caption,
       ),
     );
   }

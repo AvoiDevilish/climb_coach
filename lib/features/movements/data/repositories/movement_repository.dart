@@ -1,0 +1,38 @@
+import '../../domain/models/movement.dart';
+import '../../domain/models/movement_category.dart';
+
+import '../seed/category_seed.dart';
+import '../seed/movement_seed.dart';
+
+class MovementRepository {
+
+  Future<List<MovementCategory>> getCategories() async {
+    return CategorySeed.categories;
+  }
+
+  Future<List<Movement>> getAllMovements() async {
+    return MovementSeed.movements;
+  }
+
+  Future<List<Movement>> getByCategory(
+    String categoryId,
+  ) async {
+    return MovementSeed.movements
+        .where(
+          (m) => m.categoryId == categoryId,
+        )
+        .toList();
+  }
+
+  Future<Movement?> getById(
+    String id,
+  ) async {
+    try {
+      return MovementSeed.movements.firstWhere(
+        (m) => m.id == id,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+}

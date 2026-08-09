@@ -4,7 +4,7 @@ class Tables {
   // ----------------------------
 
   static const databaseName = 'climb_coach.db';
-  static const databaseVersion = 1;
+  static const databaseVersion = 3;
 
   // ----------------------------
   // Athletes

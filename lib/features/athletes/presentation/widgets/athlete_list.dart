@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'athlete_tile.dart';
 import '../../domain/models/athlete.dart';
+
 
 class AthleteList extends StatelessWidget {
   const AthleteList({
@@ -32,20 +33,8 @@ class AthleteList extends StatelessWidget {
       itemBuilder: (context, index) {
         final athlete = athletes[index];
 
-        return Card(
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Text(
-                athlete.firstName.isNotEmpty
-                    ? athlete.firstName[0]
-                    : '?',
-              ),
-            ),
-            title: Text(
-              '${athlete.firstName} ${athlete.lastName}',
-            ),
-           
-          ),
+        return AthleteTile(
+          athlete: athlete,
         );
       },
     );

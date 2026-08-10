@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'athlete_form.dart';
-import 'athlete_list.dart';
 import '../controllers/athlete_controller.dart';
 
 class AthleteBody extends StatelessWidget {
@@ -68,28 +67,6 @@ class AthleteBody extends StatelessWidget {
             onAvatarTap: onAvatarTap,
           ),
 
-          const SizedBox(height: 24),
-
-          const Divider(),
-
-          const SizedBox(height: 12),
-
-          const Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'ورزشکاران ثبت شده',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          AthleteList(
-            athletes: controller.athletes,
-          ),
         ],
       ),
     );

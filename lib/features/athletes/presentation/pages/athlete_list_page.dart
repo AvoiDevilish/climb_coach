@@ -1,64 +1,212 @@
 import 'package:flutter/material.dart';
+import '../widgets/athlete_list.dart';
+import '../controllers/athlete_controller.dart';
 
-class AthleteListPage extends StatelessWidget {
-  const AthleteListPage({super.key});
+
+class AthleteListPage extends StatefulWidget {
+  const AthleteListPage({
+    super.key,
+  });
+
+  @override
+  State<AthleteListPage> createState() =>
+      _AthleteListPageState();
+}
+
+
+class _AthleteListPageState
+    extends State<AthleteListPage> {
+
+  final AthleteController controller =
+      AthleteController();
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.loadAthletes();
+
+    controller.addListener(_refresh);
+  }
+
+
+
+  void _refresh() {
+
+    if (mounted) {
+
+      setState(() {});
+
+    }
+
+  }
+
+
+
+  Future<void> openNewAthletePage() async {
+
+    await Navigator.pushNamed(
+      context,
+      '/athlete/new',
+    );
+
+
+    await controller.loadAthletes();
+
+  }
+
+
+
+
+  @override
+  void dispose() {
+
+    controller.removeListener(_refresh);
+
+    super.dispose();
+
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
+
       appBar: AppBar(
-        title: const Text('ورزشکاران'),
+
+        title: const Text(
+          'ورزشکاران',
+        ),
+
         centerTitle: true,
+
       ),
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushNamed(context, '/athlete/new');
-        },
-        icon: const Icon(Icons.person_add),
-        label: const Text('ثبت ورزشکار'),
+
+
+      floatingActionButton:
+          FloatingActionButton.extended(
+
+
+        onPressed:
+            openNewAthletePage,
+
+
+        icon:
+            const Icon(
+              Icons.person_add,
+            ),
+
+
+        label:
+            const Text(
+              'ثبت ورزشکار',
+            ),
+
       ),
 
-      body: const Padding(
-        padding: EdgeInsets.all(16),
+
+
+
+      body: Padding(
+
+        padding:
+            const EdgeInsets.all(16),
+
 
         child: Column(
+
           children: [
 
+
+
             TextField(
-              decoration: InputDecoration(
-                hintText: 'جستجوی ورزشکار...',
-                prefixIcon: Icon(Icons.search),
+
+              decoration:
+                  const InputDecoration(
+
+                hintText:
+                    'جستجوی ورزشکار...',
+
+
+                prefixIcon:
+                    Icon(
+                      Icons.search,
+                    ),
+
+
+                border:
+                    OutlineInputBorder(),
+
               ),
+
             ),
 
-            SizedBox(height: 12),
+
+
+            const SizedBox(
+              height: 12,
+            ),
+
+
 
             Row(
+
               children: [
 
-                Icon(Icons.filter_alt),
 
-                SizedBox(width: 8),
+                const Icon(
+                  Icons.filter_alt,
+                ),
 
-                Text('فیلترها (به‌زودی)'),
+
+
+                const SizedBox(
+                  width: 8,
+                ),
+
+
+
+                const Text(
+                  'فیلترها (به‌زودی)',
+                ),
+
 
               ],
+
             ),
 
-            SizedBox(height: 20),
+
+
+
+            const SizedBox(
+              height: 20,
+            ),
+
+
+
 
             Expanded(
-              child: Center(
-                child: Text(
-                  'لیست ورزشکاران اینجا نمایش داده خواهد شد.',
-                ),
+              child: AthleteList(
+                athletes: controller.athletes,
               ),
             ),
 
+
           ],
+
         ),
+
       ),
+
     );
+
   }
+
 }

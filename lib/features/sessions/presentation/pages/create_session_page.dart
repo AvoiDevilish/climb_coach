@@ -4,6 +4,7 @@ import '../controllers/session_controller.dart';
 
 import '../../domain/models/session.dart';
 
+import '../../../../core/utils/number_helper.dart';
 
 class CreateSessionPage extends StatefulWidget {
 
@@ -96,9 +97,9 @@ class _CreateSessionPageState
 
 
       capacity:
-          int.tryParse(
-            capacityController.text,
-          ) ?? 0,
+          NumberHelper.parseInt(
+          capacityController.text,
+          ),
 
 
       allowMakeup:
@@ -108,15 +109,44 @@ class _CreateSessionPageState
 
 
 
-    await controller.addSession(
-      session,
-    );
+    try {
 
+    await controller.addSession(
+        session,
+    );
 
 
     if (mounted) {
 
-      Navigator.pop(context);
+        Navigator.pop(context);
+
+    }
+
+
+    } catch (e) {
+
+    debugPrint(
+        'SAVE SESSION ERROR: $e',
+    );
+
+
+    if (mounted) {
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+
+        SnackBar(
+
+            content:
+                Text(
+                e.toString(),
+                ),
+
+        ),
+
+        );
+
+    }
 
     }
 

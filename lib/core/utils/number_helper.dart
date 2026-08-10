@@ -1,5 +1,6 @@
 class NumberHelper {
 
+
   static const _english = [
     '0',
     '1',
@@ -54,6 +55,58 @@ class NumberHelper {
 
 
     return result;
+
   }
+
+
+
+
+  static String toEnglish(
+    String value,
+  ) {
+
+    String result = value;
+
+
+    for (int i = 0; i < _persian.length; i++) {
+
+      result =
+          result.replaceAll(
+            _persian[i],
+            _english[i],
+          );
+
+    }
+
+
+    return result;
+
+  }
+
+
+
+
+  static int parseInt(
+    String value,
+  ) {
+
+    return int.tryParse(
+      toEnglish(value),
+    ) ?? 0;
+
+  }
+
+
+
+  static double parseDouble(
+    String value,
+  ) {
+
+    return double.tryParse(
+      toEnglish(value),
+    ) ?? 0;
+
+  }
+
 
 }

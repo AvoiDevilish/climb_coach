@@ -123,6 +123,8 @@ id TEXT PRIMARY KEY,
 
 title TEXT NOT NULL,
 
+coach_id TEXT,
+
 date TEXT NOT NULL,
 
 start_time TEXT NOT NULL,

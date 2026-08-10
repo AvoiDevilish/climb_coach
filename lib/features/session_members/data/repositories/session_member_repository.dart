@@ -1,7 +1,9 @@
 import 'package:climb_coach/core/database/database_helper.dart';
 import 'package:climb_coach/core/database/tables.dart';
 
+import '../../domain/models/session_member_detail.dart';
 import '../../domain/models/session_member.dart';
+
 
 class SessionMemberRepository {
 
@@ -18,8 +20,6 @@ class SessionMemberRepository {
     );
 
   }
-
-
 
   Future<List<SessionMember>> getMembersOfSession(
     String sessionId,
@@ -52,8 +52,90 @@ class SessionMemberRepository {
 
   }
 
+    Future<List<SessionMemberDetail>> getMemberDetailsOfSession(
+    String sessionId,
+    ) async {
+
+    final db =
+        await DatabaseHelper.instance.database;
 
 
+    final result = await db.rawQuery(
+        '''
+
+        SELECT
+
+        sm.id,
+
+        sm.athlete_id,
+
+        a.first_name,
+
+        a.last_name,
+
+        sm.member_type,
+
+        sm.is_active
+
+
+        FROM ${Tables.sessionMembers} sm
+
+
+        INNER JOIN ${Tables.athletes} a
+
+        ON a.id = sm.athlete_id
+
+
+        WHERE
+
+        sm.session_id = ?
+
+        AND sm.is_deleted = 0
+
+        AND a.is_deleted = 0
+
+
+        ORDER BY
+
+        sm.joined_at ASC
+
+
+        ''',
+
+        [
+        sessionId,
+        ],
+
+    );
+
+
+
+    return result.map(
+
+        (e) => SessionMemberDetail(
+
+        id: e['id'].toString(),
+
+        athleteId:
+            e['athlete_id'].toString(),
+
+        firstName:
+            e['first_name']?.toString() ?? '',
+
+        lastName:
+            e['last_name']?.toString() ?? '',
+
+        memberType:
+            e['member_type']?.toString() ?? 'NORMAL',
+
+        isActive:
+            (e['is_active'] ?? 1) == 1,
+
+        ),
+
+    ).toList();
+
+    }
 
   Future<int> updateMember(
     SessionMember member,
@@ -115,5 +197,34 @@ class SessionMemberRepository {
     );
 
   }
+
+    Future<int> getActiveMemberCount(
+    String sessionId,
+    ) async {
+
+    final db =
+        await DatabaseHelper.instance.database;
+
+
+    final result = await db.rawQuery(
+        '''
+        SELECT COUNT(*) as count
+
+        FROM ${Tables.sessionMembers}
+
+        WHERE session_id = ?
+
+        AND is_deleted = 0
+
+        AND is_active = 1
+        ''',
+        [
+        sessionId,
+        ],
+    );
+
+
+    return result.first['count'] as int;
+    }
 
 }

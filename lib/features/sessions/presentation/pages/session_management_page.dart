@@ -159,37 +159,6 @@ class _SessionManagementPageState
 
                             controller.sessions
 
-                                .map(
-
-                                  (session) => {
-
-                                    "title":
-                                        session.title,
-
-
-                                    "time":
-
-                                        "${session.startTime} تا ${session.endTime}",
-
-
-                                    "count":
-                                        0,
-
-
-                                    "capacity":
-                                        session.capacity,
-
-
-                                    "makeup":
-                                        session.allowMakeup,
-
-
-                                  },
-
-                                )
-
-                                .toList(),
-
                       ),
 
                 ),

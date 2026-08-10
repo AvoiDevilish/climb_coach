@@ -111,5 +111,13 @@ class DatabaseHelper {
 
     }
 
+    if (oldVersion < 6) {
+
+      await db.execute(
+        'ALTER TABLE sessions ADD COLUMN coach_id TEXT',
+      );
+
+    }
+
   }
 }

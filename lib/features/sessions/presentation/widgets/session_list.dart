@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'session_card.dart';
+import '../../domain/models/session.dart';
+import '../pages/session_detail_page.dart';
 
+import 'session_card.dart';
 
 
 class SessionList extends StatelessWidget {
 
-  final List<Map<String, dynamic>> sessions;
+  final List<Session> sessions;
 
 
   const SessionList({
@@ -33,23 +35,48 @@ class SessionList extends StatelessWidget {
         return SessionCard(
 
           title:
-              session["title"] as String,
+              session.title,
 
 
           time:
-              session["time"] as String,
+              '${session.startTime} تا ${session.endTime}',
 
 
           currentCount:
-              session["count"] as int,
+              0,
 
 
           capacity:
-              session["capacity"] as int,
+              session.capacity,
 
 
           allowMakeup:
-              session["makeup"] as bool,
+              session.allowMakeup,
+
+
+
+          onTap: () {
+
+
+            Navigator.push(
+
+              context,
+
+              MaterialPageRoute(
+
+                builder: (_) =>
+                    SessionDetailPage(
+
+                      session: session,
+
+                    ),
+
+              ),
+
+            );
+
+
+          },
 
 
         );
@@ -58,6 +85,7 @@ class SessionList extends StatelessWidget {
       }).toList(),
 
     );
+
 
   }
 

@@ -63,8 +63,10 @@ class Session {
 
     return {
 
-      'id': id,
-
+      'id': id ?? DateTime.now()
+          .millisecondsSinceEpoch
+          .toString(),
+  
       'title': title,
 
       'coach_id': coachId,

@@ -273,3 +273,103 @@ Backlog
 4. جداسازی مسئولیت‌ها
 5. قابلیت Sync در آینده
 6. قابلیت افزودن Feature بدون بازطراحی
+
+# Development Rules
+
+این قوانین در تمام طول پروژه رعایت می‌شوند.
+
+---
+
+## Rule 01
+
+هیچ Feature جدیدی بدون بررسی ADRها پیاده‌سازی نمی‌شود.
+
+---
+
+## Rule 02
+
+هر تغییر معماری باید یک ADR جدید دریافت کند.
+
+---
+
+## Rule 03
+
+قبل از تغییر Database ابتدا Domain بررسی می‌شود.
+
+---
+
+## Rule 04
+
+هیچ جدول اصلی بدون دلیل بسیار مهم تغییر نمی‌کند.
+
+---
+
+## Rule 05
+
+Migrationها همیشه افزایشی هستند.
+
+Rollback انجام نمی‌شود.
+
+---
+
+## Rule 06
+
+هر Sprint باید در پایان Stable باشد.
+
+---
+
+## Rule 07
+
+اول زیرساخت، بعد UI.
+
+---
+
+## Rule 08
+
+اگر دو راه‌حل وجود داشت، راه‌حلی انتخاب می‌شود که پنج سال بعد نیز قابل توسعه باشد، حتی اگر امروز کمی زمان بیشتری بگیرد.
+
+Eye Club Scheduling Model v1
+
+Scheduling consists of:
+
+1. SessionTemplate
+- Weekly recurring sessions
+- Fixed weekday/time
+- Capacity settings
+
+2. SessionTemplateMember
+- Permanent athlete membership
+- Automatically appears in weekly sessions
+
+3. SessionOccurrence
+- Real date instance
+- Attendance belongs here
+
+4. SessionMember
+- Actual participants
+- Makeup and guest handling
+
+Rules:
+- Holidays do not delete sessions.
+- Coach decides cancellation.
+- Guest + Makeup cannot exceed available capacity.
+- Completed sessions remain editable and archived.
+
+## Scheduling Decision v1
+
+Current product:
+Eye Club
+
+Database prepared for multi coach,
+but current UI supports one coach.
+
+Session concept:
+
+- Permanent sessions will be modeled as weekly templates.
+- Temporary sessions will be single occurrences.
+- Permanent athletes belong to templates.
+- Actual attendance belongs to occurrences.
+
+Data priority:
+Scheduling data is considered analytics data.
+

@@ -50,6 +50,14 @@ class DatabaseHelper {
   await db.execute(CreateTables.createMovementCategoriesTable);
 
   await db.execute(CreateTables.createMovementsTable);
+
+  await db.execute(CreateTables.createSessionsTable,);
+
+  await db.execute(CreateTables.createSessionMembersTable,);
+
+  await db.execute(CreateTables.createAttendanceTable,);
+
+  await db.execute(CreateTables.createIndexes);
 }
 
   Future<void> _onUpgrade(
@@ -78,6 +86,27 @@ class DatabaseHelper {
 
       await db.execute(
         'ALTER TABLE athletes ADD COLUMN profile_image TEXT'
+      );
+
+    }
+
+
+    if (oldVersion < 4) {
+
+      await db.execute(
+        CreateTables.createSessionsTable,
+      );
+
+      await db.execute(
+        CreateTables.createAttendanceTable,
+      );
+
+    }
+
+    if (oldVersion < 5) {
+
+      await db.execute(
+        CreateTables.createSessionMembersTable,
       );
 
     }

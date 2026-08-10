@@ -115,4 +115,114 @@ REFERENCES movement_categories(id)
 
 );
 ''';
+
+static const String createSessionsTable = '''
+CREATE TABLE ${Tables.sessions} (
+
+id TEXT PRIMARY KEY,
+
+title TEXT NOT NULL,
+
+date TEXT NOT NULL,
+
+start_time TEXT NOT NULL,
+
+end_time TEXT NOT NULL,
+
+capacity INTEGER NOT NULL,
+
+allow_makeup INTEGER NOT NULL DEFAULT 1,
+
+allow_guest INTEGER NOT NULL DEFAULT 1,
+
+extra_capacity INTEGER NOT NULL DEFAULT 0,
+
+notes TEXT,
+
+created_at TEXT NOT NULL,
+
+updated_at TEXT NOT NULL,
+
+is_deleted INTEGER NOT NULL DEFAULT 0
+
+);
+''';
+
+
+static const String createAttendanceTable = '''
+CREATE TABLE ${Tables.attendance} (
+
+id TEXT PRIMARY KEY,
+
+session_id TEXT NOT NULL,
+
+athlete_id TEXT NOT NULL,
+
+attendance_type TEXT NOT NULL,
+
+status TEXT NOT NULL,
+
+note TEXT,
+
+created_at TEXT NOT NULL,
+
+updated_at TEXT NOT NULL,
+
+
+FOREIGN KEY (session_id)
+REFERENCES sessions(id),
+
+
+FOREIGN KEY (athlete_id)
+REFERENCES athletes(id)
+
+);
+''';
+
+static const String createIndexes = '''
+
+CREATE INDEX idx_sessions_date
+ON sessions(date);
+
+CREATE INDEX idx_attendance_session
+ON attendance(session_id);
+
+''';
+
+static const String createSessionMembersTable = '''
+CREATE TABLE ${Tables.sessionMembers} (
+
+id TEXT PRIMARY KEY,
+
+session_id TEXT NOT NULL,
+
+athlete_id TEXT NOT NULL,
+
+member_type TEXT NOT NULL,
+
+is_active INTEGER NOT NULL DEFAULT 1,
+
+joined_at TEXT NOT NULL,
+
+left_at TEXT,
+
+note TEXT,
+
+created_at TEXT NOT NULL,
+
+updated_at TEXT NOT NULL,
+
+is_deleted INTEGER NOT NULL DEFAULT 0,
+
+FOREIGN KEY(session_id)
+REFERENCES sessions(id),
+
+FOREIGN KEY(athlete_id)
+REFERENCES athletes(id),
+
+UNIQUE(session_id, athlete_id)
+
+);
+''';
+
 }

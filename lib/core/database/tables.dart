@@ -4,7 +4,7 @@ class Tables {
   // ----------------------------
 
   static const databaseName = 'climb_coach.db';
-  static const databaseVersion = 3;
+  static const databaseVersion = 5;
 
   // ----------------------------
   // Athletes
@@ -41,6 +41,21 @@ class Tables {
   // ----------------------------
 
   static const movements = 'movements';
+
+  // ----------------------------
+  // Sessions
+  // ----------------------------
+
+  static const sessions = 'sessions';
+
+  static const sessionMembers = 'session_members';
+
+
+  // ----------------------------
+  // Attendance
+  // ----------------------------
+
+  static const attendance = 'attendance';  
 
   // ----------------------------
   // Settings

@@ -4,6 +4,8 @@ import '../../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../../features/athletes/presentation/pages/athlete_list_page.dart';
 import '../../../features/movements/presentation/pages/movement_browser_page.dart';
 import '../../../features/assessments/presentation/pages/assessment_browser_page.dart';
+import '../../../features/sessions/presentation/pages/session_management_page.dart';
+
 import '../eye_bottom_navigation.dart';
 
 class MainNavigationPage extends StatefulWidget {
@@ -24,6 +26,8 @@ class _MainNavigationPageState
     const DashboardPage(),
 
     const AthleteListPage(),
+
+    const SessionManagementPage(),
 
     const MovementBrowserPage(),
 

@@ -6,6 +6,7 @@ import '../features/movements/presentation/pages/movement_list_page.dart';
 import '../features/assessments/presentation/pages/assessment_browser_page.dart';
 import '../features/assessments/presentation/pages/assessment_detail_page.dart';
 import '../features/assessments/presentation/pages/assessment_execution_page.dart';
+import '../features/sessions/presentation/pages/create_session_page.dart';
 import '../core/navigation/pages/main_navigation_page.dart';
 
 class AppRoutes {
@@ -29,5 +30,7 @@ class AppRoutes {
     '/assessment/detail': (_) => const AssessmentDetailPage(),
 
     '/assessment/execution': (_) => const AssessmentExecutionPage(),
+
+    '/session/create': (context) => const CreateSessionPage(),
   };
 }

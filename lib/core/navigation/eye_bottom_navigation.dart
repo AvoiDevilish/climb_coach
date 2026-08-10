@@ -30,6 +30,12 @@ class EyeBottomNavigation extends StatelessWidget {
         ),
 
         NavigationDestination(
+          icon: Icon(Icons.calendar_month_outlined),
+          selectedIcon: Icon(Icons.calendar_month),
+          label: "سانس‌ها",
+        ),
+
+        NavigationDestination(
           icon: Icon(Icons.fitness_center_outlined),
           selectedIcon: Icon(Icons.fitness_center),
           label: "حرکات",

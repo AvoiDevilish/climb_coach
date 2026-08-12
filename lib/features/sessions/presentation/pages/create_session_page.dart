@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../controllers/session_controller.dart';
-
 import '../../domain/models/session.dart';
 
 import '../../../../core/utils/number_helper.dart';
+
 
 class CreateSessionPage extends StatefulWidget {
 
@@ -50,12 +50,59 @@ class _CreateSessionPageState
 
 
 
+  bool isRecurring = false;
+
+
   bool allowMakeup = true;
+
+
+  bool allowGuest = true;
+
+
+
+  int? selectedWeekday;
+
+
+  String? selectedClub;
+
+
+
+  final List<String> clubs = [
+
+    'Rock Stars (Boulder)',
+
+    'شهید حریری',
+
+    'سایت‌های طبیعت',
+
+  ];
+
+
+
+  final Map<int, String> weekdays = {
+
+    DateTime.saturday: 'شنبه',
+
+    DateTime.sunday: 'یکشنبه',
+
+    DateTime.monday: 'دوشنبه',
+
+    DateTime.tuesday: 'سه‌شنبه',
+
+    DateTime.wednesday: 'چهارشنبه',
+
+    DateTime.thursday: 'پنجشنبه',
+
+    DateTime.friday: 'جمعه',
+
+  };
+
 
 
 
   @override
   void dispose() {
+
 
     titleController.dispose();
 
@@ -67,6 +114,7 @@ class _CreateSessionPageState
 
     capacityController.dispose();
 
+
     super.dispose();
 
   }
@@ -74,18 +122,76 @@ class _CreateSessionPageState
 
 
 
+  Future save() async {
 
-  Future<void> save() async {
+
+    if (titleController.text.isEmpty ||
+        startTimeController.text.isEmpty ||
+        endTimeController.text.isEmpty ||
+        capacityController.text.isEmpty) {
+
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+
+        const SnackBar(
+
+          content:
+              Text(
+                'اطلاعات ضروری را کامل کنید',
+              ),
+
+        ),
+
+      );
+
+
+      return;
+
+    }
+
+
+
+    if (isRecurring &&
+        selectedWeekday == null) {
+
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+
+        const SnackBar(
+
+          content:
+              Text(
+                'روز هفته را انتخاب کنید',
+              ),
+
+        ),
+
+      );
+
+
+      return;
+
+    }
+
 
 
     final session = Session(
+
 
       title:
           titleController.text,
 
 
+      club:
+          selectedClub,
+
+
       date:
-          dateController.text,
+          isRecurring
+              ? ''
+              : dateController.text,
 
 
       startTime:
@@ -98,12 +204,27 @@ class _CreateSessionPageState
 
       capacity:
           NumberHelper.parseInt(
-          capacityController.text,
+            capacityController.text,
           ),
 
 
       allowMakeup:
           allowMakeup,
+
+
+      allowGuest:
+          allowGuest,
+
+
+      isRecurring:
+          isRecurring,
+
+
+      weekday:
+          isRecurring
+              ? selectedWeekday
+              : null,
+
 
     );
 
@@ -111,42 +232,46 @@ class _CreateSessionPageState
 
     try {
 
-    await controller.addSession(
+
+      await controller.addSession(
         session,
-    );
+      );
 
 
-    if (mounted) {
+      if (mounted) {
 
         Navigator.pop(context);
 
-    }
+      }
+
 
 
     } catch (e) {
 
-    debugPrint(
+
+      debugPrint(
         'SAVE SESSION ERROR: $e',
-    );
+      );
 
 
-    if (mounted) {
+      if (mounted) {
+
 
         ScaffoldMessenger.of(context)
             .showSnackBar(
 
-        SnackBar(
+          SnackBar(
 
             content:
                 Text(
-                e.toString(),
+                  e.toString(),
                 ),
 
-        ),
+          ),
 
         );
 
-    }
+      }
 
     }
 
@@ -162,6 +287,7 @@ class _CreateSessionPageState
     TextEditingController controller,
   ) {
 
+
     return Padding(
 
       padding:
@@ -170,7 +296,8 @@ class _CreateSessionPageState
           ),
 
 
-      child: TextField(
+      child:
+          TextField(
 
         controller:
             controller,
@@ -192,9 +319,8 @@ class _CreateSessionPageState
 
     );
 
+
   }
-
-
 
 
 
@@ -206,18 +332,20 @@ class _CreateSessionPageState
     return Scaffold(
 
 
-      appBar: AppBar(
+      appBar:
+          AppBar(
 
         title:
             const Text(
-              "افزودن سانس",
+              'افزودن سانس',
             ),
 
       ),
 
 
 
-      body: SingleChildScrollView(
+      body:
+          SingleChildScrollView(
 
 
         padding:
@@ -225,39 +353,83 @@ class _CreateSessionPageState
 
 
 
-        child: Column(
+        child:
+            Column(
 
 
           children: [
 
 
+
             field(
-              "نام سانس",
+              'نام سانس',
               titleController,
             ),
 
 
-            field(
-              "تاریخ",
-              dateController,
+
+            DropdownButtonFormField<String>(
+
+
+              value:
+                  selectedClub,
+
+
+              decoration:
+                  const InputDecoration(
+
+                labelText:
+                    'کلوپ',
+
+                border:
+                    OutlineInputBorder(),
+
+              ),
+
+
+
+              items:
+                  clubs.map(
+
+                    (club) =>
+                        DropdownMenuItem(
+
+                      value:
+                          club,
+
+                      child:
+                          Text(
+                            club,
+                          ),
+
+                    ),
+
+                  )
+                  .toList(),
+
+
+
+              onChanged:
+                  (value) {
+
+
+                setState(() {
+
+                  selectedClub =
+                      value;
+
+                });
+
+
+              },
+
+
             ),
 
 
-            field(
-              "ساعت شروع",
-              startTimeController,
-            ),
 
-
-            field(
-              "ساعت پایان",
-              endTimeController,
-            ),
-
-
-            field(
-              "ظرفیت",
-              capacityController,
+            const SizedBox(
+              height: 12,
             ),
 
 
@@ -266,7 +438,145 @@ class _CreateSessionPageState
 
               title:
                   const Text(
-                    "پذیرش جبرانی",
+                    'سانس دائمی',
+                  ),
+
+
+              value:
+                  isRecurring,
+
+
+              onChanged:
+                  (value) {
+
+
+                setState(() {
+
+
+                  isRecurring =
+                      value;
+
+
+                  if (!value) {
+
+                    selectedWeekday =
+                        null;
+
+                  }
+
+
+                });
+
+
+              },
+
+
+            ),
+
+
+
+
+            if (isRecurring)
+
+
+              DropdownButtonFormField<int>(
+
+
+                value:
+                    selectedWeekday,
+
+
+                decoration:
+                    const InputDecoration(
+
+                  labelText:
+                      'روز هفته',
+
+                  border:
+                      OutlineInputBorder(),
+
+                ),
+
+
+
+                items:
+                    weekdays.entries
+                        .map(
+
+                      (item) =>
+                          DropdownMenuItem(
+
+                        value:
+                            item.key,
+
+                        child:
+                            Text(
+                              item.value,
+                            ),
+
+                      ),
+
+                    )
+                        .toList(),
+
+
+
+                onChanged:
+                    (value) {
+
+
+                  setState(() {
+
+                    selectedWeekday =
+                        value;
+
+                  });
+
+
+                },
+
+
+              )
+
+            else
+
+
+              field(
+                'تاریخ',
+                dateController,
+              ),
+
+
+
+
+
+            field(
+              'ساعت شروع',
+              startTimeController,
+            ),
+
+
+
+            field(
+              'ساعت پایان',
+              endTimeController,
+            ),
+
+
+
+            field(
+              'ظرفیت',
+              capacityController,
+            ),
+
+
+
+
+            SwitchListTile(
+
+              title:
+                  const Text(
+                    'پذیرش جبرانی',
                   ),
 
 
@@ -277,6 +587,7 @@ class _CreateSessionPageState
               onChanged:
                   (value) {
 
+
                 setState(() {
 
                   allowMakeup =
@@ -284,7 +595,41 @@ class _CreateSessionPageState
 
                 });
 
+
               },
+
+
+            ),
+
+
+
+
+            SwitchListTile(
+
+              title:
+                  const Text(
+                    'پذیرش مهمان',
+                  ),
+
+
+              value:
+                  allowGuest,
+
+
+              onChanged:
+                  (value) {
+
+
+                setState(() {
+
+                  allowGuest =
+                      value;
+
+                });
+
+
+              },
+
 
             ),
 
@@ -312,7 +657,7 @@ class _CreateSessionPageState
 
                 child:
                     const Text(
-                      "ثبت سانس",
+                      'ثبت سانس',
                     ),
 
               ),
@@ -322,12 +667,17 @@ class _CreateSessionPageState
 
           ],
 
+
         ),
+
 
       ),
 
+
     );
 
+
   }
+
 
 }

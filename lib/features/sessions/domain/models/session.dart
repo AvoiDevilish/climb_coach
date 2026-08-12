@@ -3,6 +3,8 @@ class Session {
 
   final String title;
 
+  final String? club;
+
   final String? coachId;
 
   final String date;
@@ -27,11 +29,17 @@ class Session {
 
   final bool isDeleted;
 
+  final bool isRecurring;
+
+  final int? weekday;
+
 
   Session({
     this.id,
 
     required this.title,
+
+    this.club,
 
     this.coachId,
 
@@ -56,6 +64,11 @@ class Session {
     this.updatedAt,
 
     this.isDeleted = false,
+
+    this.isRecurring = false,
+
+    this.weekday,
+
   });
 
 
@@ -68,6 +81,8 @@ class Session {
           .toString(),
   
       'title': title,
+
+      'club': club,
 
       'coach_id': coachId,
 
@@ -98,6 +113,12 @@ class Session {
       'is_deleted':
           isDeleted ? 1 : 0,
 
+      'is_recurring':
+          isRecurring ? 1 : 0,
+
+      'weekday':
+          weekday,
+
     };
   }
 
@@ -111,6 +132,8 @@ class Session {
       id: map['id']?.toString(),
 
       title: map['title'] ?? '',
+
+      club: map['club'],
 
       coachId: map['coach_id'],
 
@@ -153,6 +176,13 @@ class Session {
 
       isDeleted:
           (map['is_deleted'] ?? 0) == 1,
+
+      isRecurring:
+          (map['is_recurring'] ?? 0) == 1,
+
+
+      weekday:
+          map['weekday'],
 
     );
   }

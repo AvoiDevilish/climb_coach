@@ -119,5 +119,47 @@ class DatabaseHelper {
 
     }
 
+    if (oldVersion < 9) {
+
+      final columns =
+          await db.rawQuery(
+            "PRAGMA table_info(sessions)",
+          );
+
+
+      final columnNames =
+          columns.map(
+            (column) => column['name'],
+          ).toList();
+
+
+      if (!columnNames.contains('is_recurring')) {
+
+        await db.execute(
+          "ALTER TABLE sessions ADD COLUMN is_recurring INTEGER NOT NULL DEFAULT 0;",
+        );
+
+      }
+
+
+      if (!columnNames.contains('weekday')) {
+
+        await db.execute(
+          "ALTER TABLE sessions ADD COLUMN weekday INTEGER;",
+        );
+
+      }
+
+
+      if (!columnNames.contains('club')) {
+
+        await db.execute(
+          "ALTER TABLE sessions ADD COLUMN club TEXT;",
+        );
+
+      }
+
+    } 
+
   }
 }

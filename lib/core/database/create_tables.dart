@@ -125,7 +125,11 @@ title TEXT NOT NULL,
 
 coach_id TEXT,
 
-date TEXT NOT NULL,
+is_permanent INTEGER NOT NULL DEFAULT 0,
+
+weekday INTEGER,
+
+date TEXT,
 
 start_time TEXT NOT NULL,
 

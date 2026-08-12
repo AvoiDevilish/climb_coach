@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../controllers/session_controller.dart';
-import '../widgets/session_list.dart';
 
+import '../widgets/week_session_view.dart';
+
+import '../../../../core/calendar/calendar_helper.dart';
 import '../../../../core/design/app_spacing.dart';
 
 
@@ -123,7 +125,9 @@ class _SessionManagementPageState
 
 
 
-      body: Padding(
+        body:
+
+        Padding(
 
         padding:
             const EdgeInsets.all(
@@ -131,39 +135,19 @@ class _SessionManagementPageState
             ),
 
 
-
         child:
 
-            controller.sessions.isEmpty
+        WeekSessionView(
 
-                ?
+          selectedDate:
+              CalendarHelper.nextSevenDays().first,
 
-                const Center(
+          sessions:
+              controller.sessions,
 
-                  child:
-                      Text(
-                        "هنوز سانسی ثبت نشده",
-                      ),
+        ),
 
-                )
-
-                :
-
-                SingleChildScrollView(
-
-                  child:
-
-                      SessionList(
-
-                        sessions:
-
-                            controller.sessions
-
-                      ),
-
-                ),
-
-      ),
+        ),
 
     );
 

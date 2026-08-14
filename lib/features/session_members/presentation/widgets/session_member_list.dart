@@ -176,6 +176,26 @@ class _SessionMemberListState
                             member.memberType,
                       ),
 
+
+                  trailing:
+                      IconButton(
+
+                        icon: const Icon(
+                          Icons.remove_circle_outline,
+                          color: Colors.red,
+                        ),
+
+                        onPressed: () {
+
+                          controller.removeMember(
+                            member.id,
+                            widget.sessionId,
+                          );
+
+                        },
+
+                      ),
+
                 ),
 
               );

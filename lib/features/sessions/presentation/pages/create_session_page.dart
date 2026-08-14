@@ -4,6 +4,7 @@ import '../controllers/session_controller.dart';
 import '../../domain/models/session.dart';
 
 import '../../../../core/utils/number_helper.dart';
+import '../../../../core/calendar/calendar_helper.dart';
 
 class CreateSessionPage extends StatefulWidget {
   const CreateSessionPage({
@@ -23,14 +24,11 @@ class _CreateSessionPageState
   final titleController =
       TextEditingController();
 
-  final dateController =
-      TextEditingController();
+  DateTime? selectedDate;
 
-  final startTimeController =
-      TextEditingController();
+  TimeOfDay? selectedStartTime;
 
-  final endTimeController =
-      TextEditingController();
+  TimeOfDay? selectedEndTime;
 
   final capacityController =
       TextEditingController();
@@ -42,7 +40,7 @@ class _CreateSessionPageState
   String? selectedClub;
 
   final List<String> clubs = [
-    'Rock Stars (Boulder)',
+    'ستارگان صخره',
     'شهید حریری',
     'سایت‌های طبیعت',
   ];
@@ -60,9 +58,6 @@ class _CreateSessionPageState
   @override
   void dispose() {
     titleController.dispose();
-    dateController.dispose();
-    startTimeController.dispose();
-    endTimeController.dispose();
     capacityController.dispose();
 
     super.dispose();
@@ -70,8 +65,8 @@ class _CreateSessionPageState
 
   Future<void> save() async {
     if (titleController.text.isEmpty ||
-        startTimeController.text.isEmpty ||
-        endTimeController.text.isEmpty ||
+        selectedStartTime == null ||
+        selectedEndTime == null ||
         capacityController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -97,14 +92,33 @@ class _CreateSessionPageState
       return;
     }
 
+    if (!isRecurring &&
+        selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'تاریخ را انتخاب کنید',
+          ),
+        ),
+      );
+
+      return;
+    }
+
     final session = Session(
       title: titleController.text,
       club: selectedClub,
       date: isRecurring
           ? ''
-          : dateController.text,
-      startTime: startTimeController.text,
-      endTime: endTimeController.text,
+          : CalendarHelper.toPersianDate(
+              selectedDate!,
+            ),
+      startTime: formatTime(
+        selectedStartTime!,
+      ),
+      endTime: formatTime(
+        selectedEndTime!,
+      ),
       capacity: NumberHelper.parseInt(
         capacityController.text,
       ),
@@ -135,6 +149,119 @@ class _CreateSessionPageState
         );
       }
     }
+  }
+
+  String formatTime(
+    TimeOfDay time,
+  ) {
+
+    final hour =
+        time.hour.toString().padLeft(2, '0');
+
+    final minute =
+        time.minute.toString().padLeft(2, '0');
+
+
+    return '$hour:$minute';
+
+  }
+
+  Future<void> pickTime(
+    bool isStart,
+  ) async {
+
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: (isStart
+              ? selectedStartTime
+              : selectedEndTime) ??
+          TimeOfDay.now(),
+      initialEntryMode:
+          TimePickerEntryMode.dial,
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          selectedStartTime = picked;
+        } else {
+          selectedEndTime = picked;
+        }
+      });
+    }
+  }
+
+  Widget timeField(
+    String label,
+    TimeOfDay? value,
+    bool isStart,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 12,
+      ),
+      child: InkWell(
+        onTap: () => pickTime(isStart),
+        child: InputDecorator(
+          decoration: InputDecoration(
+            labelText: label,
+            border: const OutlineInputBorder(),
+          ),
+          child: Text(
+            value == null
+                ? 'انتخاب ساعت'
+                : NumberHelper.toPersian(
+                    formatTime(value),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(
+        const Duration(days: 365),
+      ),
+      lastDate: DateTime.now().add(
+        const Duration(days: 365),
+      ),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Widget dateField() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 12,
+      ),
+      child: InkWell(
+        onTap: pickDate,
+        child: InputDecorator(
+          decoration: const InputDecoration(
+            labelText: 'تاریخ',
+            border: OutlineInputBorder(),
+          ),
+          child: Text(
+            selectedDate == null
+                ? 'انتخاب تاریخ'
+                : NumberHelper.toPersian(
+                    CalendarHelper.toPersianDate(
+                      selectedDate!,
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget field(
@@ -235,19 +362,18 @@ class _CreateSessionPageState
                 },
               )
             else
-              field(
-                'تاریخ',
-                dateController,
-              ),
+              dateField(),
 
-            field(
+            timeField(
               'ساعت شروع',
-              startTimeController,
+              selectedStartTime,
+              true,
             ),
 
-            field(
+            timeField(
               'ساعت پایان',
-              endTimeController,
+              selectedEndTime,
+              false,
             ),
 
             field(

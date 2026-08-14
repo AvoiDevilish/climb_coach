@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../athletes/presentation/controllers/athlete_controller.dart';
 
 import '../../domain/models/session_member.dart';
+import '../../domain/constants/session_member_types.dart';
 
 import '../controllers/session_member_controller.dart';
 
@@ -11,9 +12,12 @@ class AddSessionMemberPage extends StatefulWidget {
 
   final String sessionId;
 
+  final int capacity;
+
   const AddSessionMemberPage({
     super.key,
     required this.sessionId,
+    required this.capacity,
   });
 
 
@@ -37,6 +41,29 @@ class _AddSessionMemberPageState
       SessionMemberController();
 
 
+  String selectedMemberType =
+      SessionMemberTypes.normal;
+
+
+  final Map<String, String> memberTypeLabels = {
+    SessionMemberTypes.normal: 'عضو عادی',
+    SessionMemberTypes.makeup: 'جبرانی',
+    SessionMemberTypes.guest: 'مهمان',
+    SessionMemberTypes.trial: 'تستی',
+    SessionMemberTypes.private: 'خصوصی',
+  };
+
+
+  bool isSaving = false;
+
+
+  int get availableCapacity {
+
+    return widget.capacity -
+        memberController.members.length;
+
+  }
+
 
   @override
   void initState() {
@@ -45,14 +72,34 @@ class _AddSessionMemberPageState
 
     athleteController.loadAthletes();
 
-  }
+    memberController.loadMembers(
+      widget.sessionId,
+    );
 
+  }
 
 
   Future addMember(
       String athleteId,
   ) async {
 
+    if (availableCapacity <= 0) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'ظرفیت این سانس تکمیل است',
+          ),
+        ),
+      );
+
+      return;
+
+    }
+
+    setState(() {
+      isSaving = true;
+    });
 
     final member = SessionMember(
 
@@ -64,22 +111,47 @@ class _AddSessionMemberPageState
 
       athleteId: athleteId,
 
+      memberType: selectedMemberType,
+
     );
 
+    try {
 
-    await memberController.addMember(
-      member,
-    );
+      await memberController.addMember(
+        member,
+      );
 
+      if (mounted) {
 
-    if(mounted){
+        Navigator.pop(context);
 
-      Navigator.pop(context);
+      }
+
+    } catch (e) {
+
+      debugPrint(
+        'ADD SESSION MEMBER ERROR: $e',
+      );
+
+      if (mounted) {
+
+        setState(() {
+          isSaving = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'این ورزشکار قبلاً به این سانس اضافه شده',
+            ),
+          ),
+        );
+
+      }
 
     }
 
   }
-
 
 
   @override
@@ -98,93 +170,181 @@ class _AddSessionMemberPageState
       ),
 
 
-
       body: AnimatedBuilder(
 
-        animation: athleteController,
+        animation: Listenable.merge(
+          [
+            athleteController,
+            memberController,
+          ],
+        ),
 
         builder: (context,child){
 
 
-          final athletes =
-              athleteController.athletes;
+          final existingAthleteIds =
+              memberController.members
+                  .map(
+                    (member) => member.athleteId,
+                  )
+                  .toSet();
 
 
-
-          if(athletes.isEmpty){
-
-            return const Center(
-
-              child:
-                  Text(
-                    'ورزشکاری ثبت نشده',
-                  ),
-
-            );
-
-          }
+          final availableAthletes =
+              athleteController.athletes
+                  .where(
+                    (athlete) => !existingAthleteIds
+                        .contains(athlete.id),
+                  )
+                  .toList();
 
 
+          return Column(
 
-          return ListView.builder(
+            children: [
 
-            itemCount:
-                athletes.length,
+              Padding(
 
+                padding:
+                    const EdgeInsets.all(12),
 
-            itemBuilder:
-                (context,index){
+                child: Column(
 
+                  children: [
 
-              final athlete =
-                  athletes[index];
+                    Text(
+                      'ظرفیت باقی‌مانده: $availableCapacity نفر',
+                    ),
 
+                    const SizedBox(
+                      height: 8,
+                    ),
 
+                    DropdownButtonFormField<String>(
 
-              return Card(
+                      initialValue:
+                          selectedMemberType,
 
-                child: ListTile(
-
-
-                  leading:
-                      const Icon(
-                        Icons.person,
+                      decoration:
+                          const InputDecoration(
+                        labelText: 'نوع عضویت',
+                        border:
+                            OutlineInputBorder(),
                       ),
 
-
-
-                  title:
-                      Text(
-                        '${athlete.firstName} ${athlete.lastName}',
-                      ),
-
-
-
-                  trailing:
-                      ElevatedButton(
-
-                        onPressed: (){
-
-                          addMember(
-                            athlete.id!,
-                          );
-
-                        },
-
-
-                        child:
-                            const Text(
-                              'افزودن',
+                      items: memberTypeLabels
+                          .entries
+                          .map(
+                        (entry) {
+                          return DropdownMenuItem<
+                              String>(
+                            value: entry.key,
+                            child: Text(
+                              entry.value,
                             ),
+                          );
+                        },
+                      ).toList(),
 
-                      ),
+                      onChanged: (value) {
+
+                        if (value == null) return;
+
+                        setState(() {
+                          selectedMemberType =
+                              value;
+                        });
+
+                      },
+
+                    ),
+
+                  ],
 
                 ),
 
-              );
+              ),
+
+              Expanded(
+
+                child: availableAthletes.isEmpty
+
+                    ? const Center(
+
+                        child:
+                            Text(
+                              'همه‌ی ورزشکاران قبلاً به این سانس اضافه شده‌اند',
+                            ),
+
+                      )
+
+                    : ListView.builder(
+
+                        itemCount:
+                            availableAthletes.length,
 
 
-            },
+                        itemBuilder:
+                            (context,index){
+
+
+                          final athlete =
+                              availableAthletes[index];
+
+
+                          return Card(
+
+                            child: ListTile(
+
+
+                              leading:
+                                  const Icon(
+                                    Icons.person,
+                                  ),
+
+
+
+                              title:
+                                  Text(
+                                    '${athlete.firstName} ${athlete.lastName}',
+                                  ),
+
+
+
+                              trailing:
+                                  ElevatedButton(
+
+                                    onPressed: isSaving ||
+                                            availableCapacity <= 0
+                                        ? null
+                                        : (){
+
+                                      addMember(
+                                        athlete.id!,
+                                      );
+
+                                    },
+
+
+                                    child:
+                                        const Text(
+                                          'افزودن',
+                                        ),
+
+                                  ),
+
+                            ),
+
+                          );
+
+
+                        },
+
+                      ),
+
+              ),
+
+            ],
 
           );
 

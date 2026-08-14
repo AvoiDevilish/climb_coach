@@ -4,6 +4,7 @@ import '../../data/repositories/session_member_repository.dart';
 import '../../domain/models/session_member.dart';
 import '../../domain/models/session_member_detail.dart';
 
+
 class SessionMemberController extends ChangeNotifier {
 
   final SessionMemberRepository repository =
@@ -52,19 +53,17 @@ class SessionMemberController extends ChangeNotifier {
 
 
   Future removeMember(
-    SessionMember member,
+    String memberId,
+    String sessionId,
   ) async {
 
-    if (member.id == null) return;
-
-
     await repository.removeMember(
-      member.id!,
+      memberId,
     );
 
 
     await loadMembers(
-      member.sessionId,
+      sessionId,
     );
 
   }

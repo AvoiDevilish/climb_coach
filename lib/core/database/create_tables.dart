@@ -123,9 +123,13 @@ id TEXT PRIMARY KEY,
 
 title TEXT NOT NULL,
 
+club TEXT,
+
 coach_id TEXT,
 
 is_permanent INTEGER NOT NULL DEFAULT 0,
+
+is_recurring INTEGER NOT NULL DEFAULT 0,
 
 weekday INTEGER,
 

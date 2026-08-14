@@ -188,6 +188,8 @@ class _SessionDetailPageState
                                 AddSessionMemberPage(
                               sessionId:
                                   session.id!,
+                              capacity:
+                                  session.capacity,
                             ),
 
                           ),

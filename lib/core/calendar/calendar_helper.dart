@@ -68,8 +68,15 @@ class CalendarHelper {
         Jalali.fromDateTime(date);
 
 
+    final month =
+        jalali.month.toString().padLeft(2, '0');
+
+    final day =
+        jalali.day.toString().padLeft(2, '0');
+
+
     return
-        '${jalali.day}/${jalali.month}/${jalali.year}';
+        '${jalali.year}/$month/$day';
 
   }
 

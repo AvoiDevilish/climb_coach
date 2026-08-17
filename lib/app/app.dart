@@ -5,12 +5,15 @@ import 'routes.dart';
 import 'theme.dart';
 
 class ClimbCoachApp extends StatelessWidget {
-  const ClimbCoachApp({super.key});
+  const ClimbCoachApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Eye Club',
+
       debugShowCheckedModeBanner: false,
 
       theme: AppTheme.light,
@@ -30,7 +33,7 @@ class ClimbCoachApp extends StatelessWidget {
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: child!,
+          child: child ?? const SizedBox.shrink(),
         );
       },
 

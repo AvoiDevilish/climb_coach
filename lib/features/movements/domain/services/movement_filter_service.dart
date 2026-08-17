@@ -12,19 +12,26 @@ class MovementFilterService {
     final q = query.trim().toLowerCase();
 
     return movements.where((movement) {
-      return movement.title
-          .toLowerCase()
-          .contains(q);
+      final name = movement.name.toLowerCase();
+
+      final bodyRegion =
+          movement.bodyRegion.toLowerCase();
+
+      final muscles =
+          movement.primaryMuscles.join(' ').toLowerCase();
+
+      return name.contains(q) ||
+          bodyRegion.contains(q) ||
+          muscles.contains(q);
     }).toList();
   }
 
   static List<Movement> byCategory(
     List<Movement> movements,
-    String categoryId,
+    String category,
   ) {
     return movements.where(
-      (movement) =>
-          movement.categoryId == categoryId,
+      (movement) => movement.category == category,
     ).toList();
   }
 }

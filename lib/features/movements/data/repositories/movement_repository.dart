@@ -5,7 +5,6 @@ import '../seed/category_seed.dart';
 import '../seed/movement_seed.dart';
 
 class MovementRepository {
-
   Future<List<MovementCategory>> getCategories() async {
     return CategorySeed.categories;
   }
@@ -15,11 +14,11 @@ class MovementRepository {
   }
 
   Future<List<Movement>> getByCategory(
-    String categoryId,
+    String category,
   ) async {
     return MovementSeed.movements
         .where(
-          (m) => m.categoryId == categoryId,
+          (movement) => movement.category == category,
         )
         .toList();
   }
@@ -29,7 +28,7 @@ class MovementRepository {
   ) async {
     try {
       return MovementSeed.movements.firstWhere(
-        (m) => m.id == id,
+        (movement) => movement.id == id,
       );
     } catch (_) {
       return null;

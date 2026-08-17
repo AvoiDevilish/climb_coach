@@ -1,37 +1,59 @@
+import 'package:flutter/material.dart';
+
+import '../features/athletes/presentation/pages/athlete_basic_info_page.dart';
 import '../features/athletes/presentation/pages/athlete_form_page.dart';
 import '../features/splash/presentation/pages/splash_page.dart';
 import '../features/athletes/presentation/pages/athlete_profile_page.dart';
+import '../features/movements/presentation/pages/movement_detail_page.dart';
 import '../features/movements/presentation/pages/movement_browser_page.dart';
 import '../features/movements/presentation/pages/movement_list_page.dart';
+
 import '../features/assessments/presentation/pages/assessment_browser_page.dart';
 import '../features/assessments/presentation/pages/assessment_detail_page.dart';
 import '../features/assessments/presentation/pages/assessment_execution_page.dart';
+
 import '../features/sessions/presentation/pages/create_session_page.dart';
 
 import '../core/navigation/pages/main_navigation_page.dart';
 
 class AppRoutes {
-  static final routes = {
+  static final Map<String, WidgetBuilder> routes = {
     '/': (context) => const SplashPage(),
 
-    '/dashboard': (context) => const MainNavigationPage(),
+    '/dashboard': (context) =>
+        const MainNavigationPage(),
 
-    '/athletes': (context) => const AthleteFormPage(),
+    '/athletes': (context) =>
+        const AthleteFormPage(),
 
-    '/athlete/new': (context) => const AthleteFormPage(),
+    '/athlete/new': (context) =>
+        const AthleteFormPage(),
 
-    '/athlete/profile': (context) => const AthleteProfilePage(),
+    '/athlete/profile': (context) =>
+        const AthleteProfilePage(),
 
-    '/movements': (context) => const MovementBrowserPage(),
+    '/athlete/basic-info': (context) =>
+        const AthleteBasicInfoPage(),
 
-    '/movements/list': (context) => const MovementListPage(),
+    '/movements': (context) =>
+        const MovementBrowserPage(),
 
-    "/assessments": (_) => const AssessmentBrowserPage(),
+    '/movements/list': (context) =>
+        const MovementListPage(),
 
-    '/assessment/detail': (_) => const AssessmentDetailPage(),
+    '/movement/detail': (context) =>
+        const MovementDetailPage(),
 
-    '/assessment/execution': (_) => const AssessmentExecutionPage(),
+    '/assessments': (context) =>
+        const AssessmentBrowserPage(),
 
-    '/session/create': (context) => const CreateSessionPage(),
+    '/assessment/detail': (context) =>
+        const AssessmentDetailPage(),
+
+    '/assessment/execution': (context) =>
+        const AssessmentExecutionPage(),
+
+    '/session/create': (context) =>
+        const CreateSessionPage(),
   };
 }

@@ -16,35 +16,76 @@ class AssessmentExecutionCard extends StatelessWidget {
     required this.onNext,
   });
 
+  String _measurementLabel(String type) {
+    switch (type) {
+      case 'reps':
+        return 'تعداد تکرار';
+
+      case 'time':
+        return 'زمان';
+
+      case 'weight':
+        return 'وزن';
+
+      case 'distance':
+        return 'مسافت';
+
+      case 'angle':
+        return 'زاویه';
+
+      default:
+        return 'مقدار';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final movement = executionItem.movement;
 
     return Card(
       elevation: 3,
-
       child: Padding(
         padding: const EdgeInsets.all(20),
-
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-
             Text(
-              movement.title,
+              movement.name,
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
 
+            const SizedBox(height: 10),
+
+            Text(
+              movement.bodyRegion,
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
+            ),
+
             const SizedBox(height: 8),
 
             Text(
-              "نوع ثبت: ${movement.recordType}",
+              'عضلات اصلی: '
+              '${movement.primaryMuscles.join('، ')}',
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              'معیار ثبت: '
+              '${_measurementLabel(movement.measurementType)}',
               style: const TextStyle(
-                color: Colors.grey,
+                fontWeight: FontWeight.w600,
               ),
             ),
 
@@ -52,11 +93,17 @@ class AssessmentExecutionCard extends StatelessWidget {
 
             TextField(
               controller: controller,
-              keyboardType: TextInputType.number,
-
+              keyboardType:
+                  const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: movement.unit,
+                border:
+                    const OutlineInputBorder(),
+                labelText:
+                    movement.measurementUnit,
+                suffixText:
+                    movement.measurementUnit,
               ),
             ),
 
@@ -64,12 +111,10 @@ class AssessmentExecutionCard extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
-
               child: FilledButton(
                 onPressed: onNext,
-
                 child: const Text(
-                  "ثبت و ادامه",
+                  'ثبت و ادامه',
                 ),
               ),
             ),

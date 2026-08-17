@@ -197,6 +197,12 @@ ON sessions(date);
 CREATE INDEX idx_attendance_session
 ON attendance(session_id);
 
+CREATE INDEX idx_attendance_athlete
+ON attendance(athlete_id);
+
+CREATE INDEX idx_session_members_athlete
+ON session_members(athlete_id);
+
 ''';
 
 static const String createSessionMembersTable = '''

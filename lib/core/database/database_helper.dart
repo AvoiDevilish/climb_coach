@@ -79,6 +79,10 @@ class DatabaseHelper {
     await db.execute(
       CreateTables.createIndexes,
     );
+
+    await db.execute(
+      CreateTables.createMovementPerformancesTable,
+    );
   }
 
   Future<void> _onUpgrade(
@@ -177,5 +181,24 @@ class DatabaseHelper {
         'ON session_members(athlete_id)',
       );
     }
+
+    if (oldVersion < 11) {
+      await db.execute(
+        CreateTables.createMovementPerformancesTable,
+      );
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS '
+        'idx_movement_performances_athlete '
+        'ON movement_performances(athlete_id)',
+      );
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS '
+        'idx_movement_performances_movement '
+        'ON movement_performances(movement_id)',
+      );
+    }
+
   }
 }

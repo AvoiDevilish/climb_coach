@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../../athletes/domain/models/athlete.dart';
 import '../../data/seed/category_seed.dart';
 import '../../domain/models/movement_category.dart';
+
+import 'movement_list_page.dart';
+
+class MovementBrowserArguments {
+  final Athlete athlete;
+
+  const MovementBrowserArguments({
+    required this.athlete,
+  });
+}
 
 class MovementBrowserPage extends StatefulWidget {
   const MovementBrowserPage({
@@ -17,8 +28,34 @@ class _MovementBrowserPageState
     extends State<MovementBrowserPage> {
   String _query = '';
 
+  MovementBrowserArguments? _arguments;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_arguments != null) {
+      return;
+    }
+
+    final argument =
+        ModalRoute.of(context)?.settings.arguments;
+
+    if (argument is Athlete) {
+      _arguments = MovementBrowserArguments(
+        athlete: argument,
+      );
+      return;
+    }
+
+    if (argument is MovementBrowserArguments) {
+      _arguments = argument;
+    }
+  }
+
   List<MovementCategory> get _filteredCategories {
-    final query = _query.trim().toLowerCase();
+    final query =
+        _query.trim().toLowerCase();
 
     final categories =
         CategorySeed.categories.cast<MovementCategory>();
@@ -30,18 +67,42 @@ class _MovementBrowserPageState
     return categories
         .where(
           (category) =>
-              category.title.toLowerCase().contains(query),
+              category.title
+                  .toLowerCase()
+                  .contains(query),
         )
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final categories = _filteredCategories;
+    final arguments = _arguments;
+
+    if (arguments == null) {
+      return const Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Text(
+              'اطلاعات ورزشکار قابل بارگذاری نیست',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final categories =
+        _filteredCategories;
+
+    final athlete = arguments.athlete;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('حرکات'),
+        title: const Text(
+          'حرکات',
+        ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
@@ -54,45 +115,89 @@ class _MovementBrowserPageState
                 8,
               ),
               child: TextField(
-                textDirection: TextDirection.rtl,
+                textDirection:
+                    TextDirection.rtl,
                 onChanged: (value) {
                   setState(() {
                     _query = value;
                   });
                 },
-                decoration: InputDecoration(
-                  hintText: 'جستجوی دسته حرکات',
-                  prefixIcon: const Icon(
+                decoration:
+                    InputDecoration(
+                  hintText:
+                      'جستجوی دسته حرکات',
+                  prefixIcon:
+                      const Icon(
                     Icons.search,
                   ),
-                  suffixIcon: _query.isEmpty
-                      ? null
-                      : IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _query = '';
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.clear,
-                          ),
-                        ),
+                  suffixIcon:
+                      _query.isEmpty
+                          ? null
+                          : IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _query = '';
+                                });
+                              },
+                              icon:
+                                  const Icon(
+                                Icons.clear,
+                              ),
+                            ),
                   filled: true,
-                  border: OutlineInputBorder(
+                  border:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
+              child: Align(
+                alignment:
+                    Alignment.centerRight,
+                child: Text(
+                  '${athlete.firstName} '
+                  '${athlete.lastName}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(
+                        color: Theme.of(
+                          context,
+                        )
+                            .colorScheme
+                            .onSurfaceVariant,
+                      ),
                 ),
               ),
             ),
@@ -112,7 +217,8 @@ class _MovementBrowserPageState
                         16,
                         24,
                       ),
-                      itemCount: categories.length,
+                      itemCount:
+                          categories.length,
                       separatorBuilder:
                           (context, index) =>
                               const SizedBox(
@@ -130,7 +236,11 @@ class _MovementBrowserPageState
                               context,
                               '/movements/list',
                               arguments:
-                                  category,
+                                  MovementListArguments(
+                                athlete: athlete,
+                                category:
+                                    category,
+                              ),
                             );
                           },
                         );
@@ -144,7 +254,8 @@ class _MovementBrowserPageState
   }
 }
 
-class _CategoryTile extends StatelessWidget {
+class _CategoryTile
+    extends StatelessWidget {
   final MovementCategory category;
   final VoidCallback onTap;
 
@@ -155,16 +266,21 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme =
+        Theme.of(context);
 
     return Material(
-      color: theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(12),
+      color:
+          theme.colorScheme.surface,
+      borderRadius:
+          BorderRadius.circular(12),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius:
+            BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
+          padding:
+              const EdgeInsets.symmetric(
             horizontal: 14,
             vertical: 13,
           ),
@@ -173,30 +289,39 @@ class _CategoryTile extends StatelessWidget {
               Container(
                 width: 42,
                 height: 42,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
+                alignment:
+                    Alignment.center,
+                decoration:
+                    BoxDecoration(
                   color: theme
                       .colorScheme
                       .surfaceContainerHighest,
                   borderRadius:
-                      BorderRadius.circular(10),
+                      BorderRadius.circular(
+                    10,
+                  ),
                 ),
                 child: Text(
                   category.icon,
-                  style: const TextStyle(
+                  style:
+                      const TextStyle(
                     fontSize: 21,
                   ),
                 ),
               ),
 
-              const SizedBox(width: 12),
+              const SizedBox(
+                width: 12,
+              ),
 
               Expanded(
                 child: Text(
                   category.title,
-                  style: const TextStyle(
+                  style:
+                      const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontWeight:
+                        FontWeight.w600,
                   ),
                 ),
               ),

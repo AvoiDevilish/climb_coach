@@ -2,28 +2,27 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../sessions/presentation/controllers/session_controller.dart';
-import '../../../sessions/presentation/pages/today_sessions_page.dart';
 import '../../../sessions/domain/models/session.dart';
+import '../../../sessions/presentation/controllers/session_controller.dart';
 
+import '../../../../core/calendar/calendar_helper.dart';
 import '../../../../core/design/app_spacing.dart';
 import '../../../../core/design/app_text_styles.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../core/widgets/uog_card.dart';
-import '../../../../core/calendar/calendar_helper.dart';
 
-class DashboardSessions extends StatefulWidget {
-  const DashboardSessions({
+class DashboardTomorrowSessions extends StatefulWidget {
+  const DashboardTomorrowSessions({
     super.key,
   });
 
   @override
-  State<DashboardSessions> createState() =>
-      _DashboardSessionsState();
+  State<DashboardTomorrowSessions> createState() =>
+      _DashboardTomorrowSessionsState();
 }
 
-class _DashboardSessionsState
-    extends State<DashboardSessions> {
+class _DashboardTomorrowSessionsState
+    extends State<DashboardTomorrowSessions> {
   final SessionController controller =
       SessionController();
 
@@ -55,19 +54,31 @@ class _DashboardSessionsState
     });
   }
 
-  List<Session> get todaySessions {
+  DateTime get _tomorrow {
     final now = DateTime.now();
 
-    final today =
+    return DateTime(
+      now.year,
+      now.month,
+      now.day + 1,
+    );
+  }
+
+  List<Session> get tomorrowSessions {
+    final tomorrow = _tomorrow;
+
+    final tomorrowPersianDate =
         CalendarHelper.normalizeDate(
-      CalendarHelper.toPersianDate(now),
+      CalendarHelper.toPersianDate(
+        tomorrow,
+      ),
     );
 
     return controller.sessions
         .where((session) {
           if (session.isRecurring) {
             return session.weekday ==
-                now.weekday;
+                tomorrow.weekday;
           }
 
           if (session.date.trim().isEmpty) {
@@ -77,12 +88,11 @@ class _DashboardSessionsState
           return CalendarHelper.normalizeDate(
                 session.date,
               ) ==
-              today;
+              tomorrowPersianDate;
         })
         .toList()
       ..sort(
-        (a, b) =>
-            a.startTime.compareTo(
+        (a, b) => a.startTime.compareTo(
           b.startTime,
         ),
       );
@@ -98,9 +108,9 @@ class _DashboardSessionsState
     int index,
   ) {
     const colors = [
-      Colors.green,
       Colors.blue,
       Colors.orange,
+      Colors.green,
       Colors.purple,
     ];
 
@@ -119,9 +129,8 @@ class _DashboardSessionsState
       margin: const EdgeInsets.only(
         bottom: 8,
       ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 10,
+      padding: const EdgeInsets.all(
+        AppSpacing.sm,
       ),
       decoration: BoxDecoration(
         color: color.withValues(
@@ -138,8 +147,8 @@ class _DashboardSessionsState
       child: Row(
         children: [
           Container(
-            width: 9,
-            height: 9,
+            width: 10,
+            height: 10,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
@@ -149,31 +158,76 @@ class _DashboardSessionsState
           const SizedBox(width: 10),
 
           Expanded(
-            child: Text(
-              session.title,
-              maxLines: 1,
-              overflow:
-                  TextOverflow.ellipsis,
-              style:
-                  AppTextStyles.body.copyWith(
-                fontWeight:
-                    FontWeight.w600,
-              ),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  session.title,
+                  maxLines: 1,
+                  overflow:
+                      TextOverflow.ellipsis,
+                  style:
+                      AppTextStyles.body.copyWith(
+                    fontWeight:
+                        FontWeight.w600,
+                  ),
+                ),
+
+                const SizedBox(height: 3),
+
+                Text(
+                  session.club?.trim().isNotEmpty ==
+                          true
+                      ? session.club!
+                      : 'سانس تمرینی',
+                  maxLines: 1,
+                  overflow:
+                      TextOverflow.ellipsis,
+                  style:
+                      AppTextStyles.body.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
 
           const SizedBox(width: 12),
 
-          Text(
-            '${_persianNumbers(session.startTime)}'
-            ' - '
-            '${_persianNumbers(session.endTime)}',
-            style:
-                AppTextStyles.body.copyWith(
-              color: color,
-              fontWeight:
-                  FontWeight.bold,
-            ),
+          Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.end,
+            children: [
+              Text(
+                _persianNumbers(
+                  session.startTime,
+                ),
+                style:
+                    AppTextStyles.body.copyWith(
+                  color: color,
+                  fontWeight:
+                      FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 2),
+
+              Text(
+                _persianNumbers(
+                  session.endTime,
+                ),
+                style:
+                    AppTextStyles.body.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -192,7 +246,12 @@ class _DashboardSessionsState
   @override
   Widget build(BuildContext context) {
     final sessions =
-        todaySessions;
+        tomorrowSessions;
+
+    final tomorrowName =
+        CalendarHelper.weekdayName(
+      _tomorrow.weekday,
+    );
 
     final countText =
         _persianNumbers(
@@ -222,9 +281,8 @@ class _DashboardSessionsState
                     height: 42,
                     alignment:
                         Alignment.center,
-                    decoration:
-                        BoxDecoration(
-                      color: Colors.green
+                    decoration: BoxDecoration(
+                      color: Colors.blue
                           .withValues(
                         alpha: 0.10,
                       ),
@@ -234,8 +292,8 @@ class _DashboardSessionsState
                       ),
                     ),
                     child: const Icon(
-                      Icons.today_outlined,
-                      color: Colors.green,
+                      Icons.event_available_outlined,
+                      color: Colors.blue,
                     ),
                   ),
 
@@ -247,17 +305,23 @@ class _DashboardSessionsState
                           CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'سانس‌های امروز',
+                          'سانس‌های فردا',
                           style:
                               AppTextStyles.headline,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 3),
                         Text(
                           _loading
                               ? 'در حال بروزرسانی...'
-                              : 'امروز $countText سانس فعال',
+                              : '$tomorrowName  '
+                                '$countText سانس',
                           style:
-                              AppTextStyles.body,
+                              AppTextStyles.body
+                                  .copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
@@ -270,6 +334,7 @@ class _DashboardSessionsState
                         : Icons
                             .keyboard_arrow_down_rounded,
                     size: 26,
+                    color: Colors.blue,
                   ),
                 ],
               ),
@@ -302,18 +367,27 @@ class _DashboardSessionsState
 
                   const SizedBox(height: 12),
 
-                  if (sessions.isEmpty)
+                  if (_loading)
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(
+                        vertical: 12,
+                      ),
+                      child:
+                          CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    )
+                  else if (sessions.isEmpty)
                     Container(
                       width: double.infinity,
                       padding:
-                          const EdgeInsets.all(
-                        14,
+                          const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
                       ),
-                      decoration:
-                          BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        )
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
                             .colorScheme
                             .surfaceContainerHighest,
                         borderRadius:
@@ -321,10 +395,24 @@ class _DashboardSessionsState
                           12,
                         ),
                       ),
-                      child: const Text(
-                        'برای امروز سانسی ثبت نشده است.',
-                        textAlign:
-                            TextAlign.center,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons
+                                .event_busy_outlined,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'برای فردا سانسی ثبت نشده است.',
+                              style:
+                                  AppTextStyles.body,
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   else
@@ -342,33 +430,6 @@ class _DashboardSessionsState
                           ),
                       ],
                     ),
-
-                  const SizedBox(height: 4),
-
-                  Align(
-                    alignment:
-                        Alignment.centerRight,
-                    child: TextButton.icon(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                const TodaySessionsPage(),
-                          ),
-                        );
-
-                        await _load();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 18,
-                      ),
-                      label: const Text(
-                        'مشاهده همه سانس‌ها',
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../../../athletes/domain/models/athlete.dart';
 import '../../data/seed/movement_seed.dart';
 import '../../domain/models/movement.dart';
 import '../../domain/models/movement_category.dart';
+import 'movement_detail_page.dart';
 
-class MovementListPage extends StatefulWidget {
+class MovementListArguments {
+  final Athlete athlete;
+  final MovementCategory category;
+
+  const MovementListArguments({
+    required this.athlete,
+    required this.category,
+  });
+}
+
+class MovementListPage
+    extends StatefulWidget {
   const MovementListPage({
     super.key,
   });
@@ -18,15 +31,41 @@ class _MovementListPageState
     extends State<MovementListPage> {
   String _searchQuery = '';
 
+  MovementListArguments? _arguments;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_arguments != null) {
+      return;
+    }
+
+    final argument =
+        ModalRoute.of(context)?.settings.arguments;
+
+    if (argument is MovementListArguments) {
+      _arguments = argument;
+      return;
+    }
+
+    // سازگاری با مسیر قدیمی
+    if (argument is MovementCategory) {
+      _arguments = null;
+    }
+  }
+
   List<Movement> _filteredMovements(
     MovementCategory category,
   ) {
-    final query = _searchQuery.trim().toLowerCase();
+    final query =
+        _searchQuery.trim().toLowerCase();
 
     return MovementSeed.movements
         .where(
           (movement) =>
-              movement.category == category.id &&
+              movement.category ==
+                  category.id &&
               !movement.isDeleted,
         )
         .where(
@@ -41,25 +80,31 @@ class _MovementListPageState
 
   @override
   Widget build(BuildContext context) {
-    final argument =
-        ModalRoute.of(context)?.settings.arguments;
+    final arguments = _arguments;
 
-    if (argument is! MovementCategory) {
+    if (arguments == null) {
       return const Scaffold(
         body: Center(
           child: Text(
-            'دسته حرکات قابل بارگذاری نیست',
+            'اطلاعات دسته حرکات قابل بارگذاری نیست',
           ),
         ),
       );
     }
 
-    final category = argument;
-    final movements = _filteredMovements(category);
+    final category =
+        arguments.category;
+
+    final athlete =
+        arguments.athlete;
+
+    final movements =
+        _filteredMovements(category);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(category.title),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
@@ -72,15 +117,19 @@ class _MovementListPageState
                 8,
               ),
               child: TextField(
-                textDirection: TextDirection.rtl,
+                textDirection:
+                    TextDirection.rtl,
                 onChanged: (value) {
                   setState(() {
                     _searchQuery = value;
                   });
                 },
-                decoration: InputDecoration(
-                  hintText: 'جستجوی حرکت...',
-                  prefixIcon: const Icon(
+                decoration:
+                    InputDecoration(
+                  hintText:
+                      'جستجوی حرکت...',
+                  prefixIcon:
+                      const Icon(
                     Icons.search,
                   ),
                   suffixIcon:
@@ -89,29 +138,69 @@ class _MovementListPageState
                           : IconButton(
                               onPressed: () {
                                 setState(() {
-                                  _searchQuery = '';
+                                  _searchQuery =
+                                      '';
                                 });
                               },
-                              icon: const Icon(
+                              icon:
+                                  const Icon(
                                 Icons.clear,
                               ),
                             ),
                   filled: true,
-                  border: OutlineInputBorder(
+                  border:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder:
+                      OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                        BorderRadius.circular(
+                      12,
+                    ),
+                    borderSide:
+                        BorderSide.none,
                   ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
+              ),
+              child: Align(
+                alignment:
+                    Alignment.centerRight,
+                child: Text(
+                  '${athlete.firstName} '
+                  '${athlete.lastName}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(
+                        color: Theme.of(
+                          context,
+                        )
+                            .colorScheme
+                            .onSurfaceVariant,
+                      ),
                 ),
               ),
             ),
@@ -132,7 +221,8 @@ class _MovementListPageState
                         16,
                         24,
                       ),
-                      itemCount: movements.length,
+                      itemCount:
+                          movements.length,
                       separatorBuilder:
                           (context, index) =>
                               const SizedBox(
@@ -149,7 +239,12 @@ class _MovementListPageState
                             Navigator.pushNamed(
                               context,
                               '/movement/detail',
-                              arguments: movement,
+                              arguments:
+                                  MovementDetailArguments(
+                                athlete: athlete,
+                                movement:
+                                    movement,
+                              ),
                             );
                           },
                         );
@@ -163,7 +258,8 @@ class _MovementListPageState
   }
 }
 
-class _MovementTile extends StatelessWidget {
+class _MovementTile
+    extends StatelessWidget {
   final Movement movement;
   final VoidCallback onTap;
 
@@ -172,7 +268,9 @@ class _MovementTile extends StatelessWidget {
     required this.onTap,
   });
 
-  String _measurementLabel(String type) {
+  String _measurementLabel(
+    String type,
+  ) {
     switch (type) {
       case 'reps':
         return 'تکرار';
@@ -194,7 +292,9 @@ class _MovementTile extends StatelessWidget {
     }
   }
 
-  IconData _measurementIcon(String type) {
+  IconData _measurementIcon(
+    String type,
+  ) {
     switch (type) {
       case 'reps':
         return Icons.repeat;
@@ -218,16 +318,21 @@ class _MovementTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme =
+        Theme.of(context);
 
     return Material(
-      color: theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(12),
+      color:
+          theme.colorScheme.surface,
+      borderRadius:
+          BorderRadius.circular(12),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius:
+            BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
+          padding:
+              const EdgeInsets.symmetric(
             horizontal: 14,
             vertical: 12,
           ),
@@ -236,13 +341,17 @@ class _MovementTile extends StatelessWidget {
               Container(
                 width: 42,
                 height: 42,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
+                alignment:
+                    Alignment.center,
+                decoration:
+                    BoxDecoration(
                   color: theme
                       .colorScheme
                       .surfaceContainerHighest,
                   borderRadius:
-                      BorderRadius.circular(10),
+                      BorderRadius.circular(
+                    10,
+                  ),
                 ),
                 child: Icon(
                   _measurementIcon(
@@ -252,26 +361,32 @@ class _MovementTile extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 12),
+              const SizedBox(
+                width: 12,
+              ),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      CrossAxisAlignment
+                          .start,
                   children: [
                     Text(
                       movement.name,
                       maxLines: 1,
                       overflow:
                           TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style:
+                          const TextStyle(
                         fontSize: 16,
                         fontWeight:
                             FontWeight.w600,
                       ),
                     ),
 
-                    const SizedBox(height: 4),
+                    const SizedBox(
+                      height: 4,
+                    ),
 
                     Text(
                       movement.bodyRegion,
@@ -291,15 +406,19 @@ class _MovementTile extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 12),
+              const SizedBox(
+                width: 12,
+              ),
 
               Column(
                 crossAxisAlignment:
-                    CrossAxisAlignment.end,
+                    CrossAxisAlignment
+                        .end,
                 children: [
                   Text(
                     _measurementLabel(
-                      movement.measurementType,
+                      movement
+                          .measurementType,
                     ),
                     style: theme
                         .textTheme
@@ -311,11 +430,15 @@ class _MovementTile extends StatelessWidget {
                         ),
                   ),
 
-                  const SizedBox(height: 2),
+                  const SizedBox(
+                    height: 2,
+                  ),
 
                   Text(
-                    movement.measurementUnit,
-                    style: const TextStyle(
+                    movement
+                        .measurementUnit,
+                    style:
+                        const TextStyle(
                       fontSize: 13,
                       fontWeight:
                           FontWeight.w600,
@@ -324,7 +447,9 @@ class _MovementTile extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(width: 6),
+              const SizedBox(
+                width: 6,
+              ),
 
               Icon(
                 Icons.chevron_left,
@@ -341,7 +466,8 @@ class _MovementTile extends StatelessWidget {
   }
 }
 
-class _EmptyState extends StatelessWidget {
+class _EmptyState
+    extends StatelessWidget {
   final bool hasSearchQuery;
 
   const _EmptyState({
@@ -352,25 +478,31 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding:
+            const EdgeInsets.all(32),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize:
+              MainAxisSize.min,
           children: [
             Icon(
               hasSearchQuery
                   ? Icons.search_off
-                  : Icons.fitness_center_outlined,
+                  : Icons
+                      .fitness_center_outlined,
               size: 42,
               color: Theme.of(context)
                   .colorScheme
                   .onSurfaceVariant,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(
+              height: 12,
+            ),
             Text(
               hasSearchQuery
                   ? 'حرکتی با این نام پیدا نشد'
                   : 'حرکتی در این دسته وجود ندارد',
-              textAlign: TextAlign.center,
+              textAlign:
+                  TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge,

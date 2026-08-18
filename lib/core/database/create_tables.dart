@@ -203,6 +203,12 @@ ON attendance(athlete_id);
 CREATE INDEX idx_session_members_athlete
 ON session_members(athlete_id);
 
+CREATE INDEX idx_movement_performances_athlete
+ON movement_performances(athlete_id);
+
+CREATE INDEX idx_movement_performances_movement
+ON movement_performances(movement_id);
+
 ''';
 
 static const String createSessionMembersTable = '''
@@ -237,6 +243,43 @@ FOREIGN KEY(athlete_id)
 REFERENCES athletes(id),
 
 UNIQUE(session_id, athlete_id)
+
+);
+''';
+
+static const String createMovementPerformancesTable = '''
+CREATE TABLE ${Tables.movementPerformances} (
+
+id TEXT PRIMARY KEY,
+
+athlete_id TEXT NOT NULL,
+
+movement_id TEXT NOT NULL,
+
+session_id TEXT,
+
+value REAL NOT NULL,
+
+unit TEXT NOT NULL,
+
+note TEXT,
+
+recorded_at TEXT NOT NULL,
+
+created_at TEXT NOT NULL,
+
+updated_at TEXT NOT NULL,
+
+is_deleted INTEGER NOT NULL DEFAULT 0,
+
+FOREIGN KEY (athlete_id)
+REFERENCES athletes(id),
+
+FOREIGN KEY (movement_id)
+REFERENCES movements(id),
+
+FOREIGN KEY (session_id)
+REFERENCES sessions(id)
 
 );
 ''';

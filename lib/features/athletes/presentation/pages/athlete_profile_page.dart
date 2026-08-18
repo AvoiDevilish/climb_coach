@@ -374,7 +374,13 @@ class _AthleteProfilePageState
           buildSection(
             Icons.fitness_center,
             'تمرین‌ها',
-            () {},
+            () {
+              Navigator.pushNamed(
+                context,
+                '/movements',
+                arguments: athlete,
+              );
+            },
           ),
 
           buildSection(

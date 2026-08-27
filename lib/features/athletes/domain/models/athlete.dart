@@ -11,6 +11,12 @@ class Athlete {
 
   final String? profileImage;
 
+  /// وضعیت سلامت: healthy / injured
+  final String healthStatus;
+  final List<String> injuryAreas;
+  final DateTime? injurySince;
+  final DateTime? recoveryUntil;
+
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -27,6 +33,11 @@ class Athlete {
     this.weight,
 
     this.profileImage,
+
+    this.healthStatus = 'healthy',
+    this.injuryAreas = const [],
+    this.injurySince,
+    this.recoveryUntil,
 
     this.createdAt,
     this.updatedAt,
@@ -46,6 +57,11 @@ class Athlete {
       'weight': weight,
 
       'profile_image': profileImage,
+
+      'health_status': healthStatus,
+      'injury_areas': injuryAreas.join(','),
+      'injury_since': injurySince?.toIso8601String(),
+      'recovery_until': recoveryUntil?.toIso8601String(),
 
       'created_at':
           (createdAt ?? DateTime.now()).toIso8601String(),
@@ -77,6 +93,19 @@ class Athlete {
           : (map['weight'] as num).toDouble(),
 
       profileImage: map['profile_image'],
+
+      healthStatus: map['health_status']?.toString() ?? 'healthy',
+      injuryAreas: (map['injury_areas']?.toString() ?? '')
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList(),
+      injurySince: map['injury_since'] == null
+          ? null
+          : DateTime.tryParse(map['injury_since'].toString()),
+      recoveryUntil: map['recovery_until'] == null
+          ? null
+          : DateTime.tryParse(map['recovery_until'].toString()),
 
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])

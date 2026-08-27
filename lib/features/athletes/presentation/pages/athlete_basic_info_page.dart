@@ -152,6 +152,10 @@ class _AthleteBasicInfoPageState
       weight: weight,
 
       profileImage: athlete.profileImage,
+      healthStatus: athlete.healthStatus,
+      injuryAreas: athlete.injuryAreas,
+      injurySince: athlete.injurySince,
+      recoveryUntil: athlete.recoveryUntil,
 
       createdAt: athlete.createdAt,
       updatedAt: DateTime.now(),

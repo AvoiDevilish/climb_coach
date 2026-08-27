@@ -64,9 +64,9 @@ class _MovementListPageState
     return MovementSeed.movements
         .where(
           (movement) =>
-              movement.category ==
+              movement.categoryId ==
                   category.id &&
-              !movement.isDeleted,
+                   !movement.isDeleted,
         )
         .where(
           (movement) =>

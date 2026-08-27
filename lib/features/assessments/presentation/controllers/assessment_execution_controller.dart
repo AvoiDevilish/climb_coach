@@ -6,11 +6,14 @@ import '../../domain/models/assessment_item.dart';
 import '../../domain/models/result/assessment_result.dart';
 
 
+
 class AssessmentExecutionController
     extends ChangeNotifier {
 
   final AssessmentRepository repository =
       AssessmentRepository();
+
+  String? athleteId;
 
 
   late Assessment assessment;
@@ -26,10 +29,13 @@ class AssessmentExecutionController
 
 
   void initialize(
-    Assessment assessment,
-  ) {
+    Assessment assessment, {
+    String? athleteId,
+  }) {
 
     this.assessment = assessment;
+
+    this.athleteId = athleteId;
 
 
     final assessmentId =
@@ -52,7 +58,6 @@ class AssessmentExecutionController
 
 
     currentIndex = 0;
-
 
     values.clear();
 
@@ -124,6 +129,9 @@ class AssessmentExecutionController
 
       assessmentId:
           assessmentId,
+
+      athleteId:
+          athleteId,
 
       createdAt:
           DateTime.now(),

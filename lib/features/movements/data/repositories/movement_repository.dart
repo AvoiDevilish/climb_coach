@@ -18,7 +18,7 @@ class MovementRepository {
   ) async {
     return MovementSeed.movements
         .where(
-          (movement) => movement.category == category,
+          (movement) => movement.categoryId == category,
         )
         .toList();
   }

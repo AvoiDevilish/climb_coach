@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../features/athletes/presentation/pages/athlete_basic_info_page.dart';
 import '../features/athletes/presentation/pages/athlete_form_page.dart';
 import '../features/athletes/presentation/pages/athlete_profile_page.dart';
+import '../features/assessments/presentation/pages/athlete_selector_page.dart';
 
 import '../features/movements/presentation/pages/movement_browser_page.dart';
 import '../features/movements/presentation/pages/movement_detail_page.dart';
@@ -14,6 +15,9 @@ import '../features/assessments/presentation/pages/assessment_detail_page.dart';
 import '../features/assessments/presentation/pages/assessment_execution_page.dart';
 
 import '../features/sessions/presentation/pages/create_session_page.dart';
+import '../features/training/presentation/pages/athlete_training_page.dart';
+import '../features/training/presentation/pages/training_program_builder_page.dart';
+import '../features/training/presentation/pages/coach_training_execution_page.dart';
 import '../features/sessions/presentation/pages/today_sessions_page.dart';
 
 import '../core/navigation/pages/main_navigation_page.dart';
@@ -60,6 +64,18 @@ class AppRoutes {
 
     '/assessment/execution': (context) =>
         const AssessmentExecutionPage(),
+
+    '/athlete/training': (context) =>
+        const AthleteTrainingPage(),
+
+    '/training/program/new': (context) =>
+        const TrainingProgramBuilderPage(),
+
+    '/athlete/training/execute': (context) =>
+        const CoachTrainingExecutionPage(),
+
+    '/assessment/athlete-selector': (context) =>
+        const AthleteSelectorPage(),
 
     '/session/create': (context) =>
         const CreateSessionPage(),

@@ -5,6 +5,7 @@ import '../../presentation/controllers/assessment_execution_controller.dart';
 import '../../presentation/models/assessment_execution_item.dart';
 import '../widgets/assessment_execution_card.dart';
 import '../../../movements/data/repositories/movement_repository.dart';
+import '../../data/repositories/assessment_result_repository.dart';
 
 class AssessmentExecutionPage extends StatefulWidget {
   const AssessmentExecutionPage({
@@ -24,6 +25,9 @@ class _AssessmentExecutionPageState
   final MovementRepository _movementRepository =
       MovementRepository();
 
+  final AssessmentResultRepository _resultRepository =
+      AssessmentResultRepository();
+
   final TextEditingController _valueController =
       TextEditingController();
 
@@ -31,6 +35,8 @@ class _AssessmentExecutionPageState
   bool _loading = true;
 
   List<AssessmentExecutionItem> _executionItems = [];
+
+  String? _athleteId;
 
   @override
   void didChangeDependencies() {
@@ -40,16 +46,31 @@ class _AssessmentExecutionPageState
       return;
     }
 
-    final argument =
+    final arguments =
         ModalRoute.of(context)?.settings.arguments;
 
-    if (argument is! Assessment) {
+    if (arguments is! Map<String, dynamic>) {
       _initialized = true;
       _loading = false;
       return;
     }
 
-    _controller.initialize(argument);
+    final assessment =
+        arguments['assessment'] as Assessment?;
+
+    _athleteId =
+        arguments['athleteId']?.toString();
+
+    if (assessment == null) {
+      _initialized = true;
+      _loading = false;
+      return;
+    }
+
+    _controller.initialize(
+      assessment,
+      athleteId: _athleteId,
+    );
 
     _loadExecutionItems();
 
@@ -164,7 +185,7 @@ class _AssessmentExecutionPageState
     _finishAssessment();
   }
 
-  void _finishAssessment() {
+  Future<void> _finishAssessment() async {
     final result =
         _controller.buildResult();
 
@@ -179,6 +200,10 @@ class _AssessmentExecutionPageState
 
       return;
     }
+
+    await _resultRepository.insert(result);
+
+    if (!mounted) return;
 
     Navigator.pop(
       context,

@@ -69,6 +69,10 @@ class DatabaseHelper {
     );
 
     await db.execute(
+      CreateTables.createSessionOccurrencesTable,
+    );
+
+    await db.execute(
       CreateTables.createSessionMembersTable,
     );
 
@@ -77,11 +81,19 @@ class DatabaseHelper {
     );
 
     await db.execute(
-      CreateTables.createIndexes,
+      CreateTables.createMovementPerformancesTable,
     );
 
+    await db.execute(CreateTables.createAssessmentsTable);
+    await db.execute(CreateTables.createAssessmentItemsTable);
+    await db.execute(CreateTables.createAssessmentResultsTable);
+    await db.execute(CreateTables.createTrainingProgramsTable);
+    await db.execute(CreateTables.createTrainingProgramItemsTable);
+    await db.execute(CreateTables.createAthleteTrainingAssignmentsTable);
+    await db.execute(CreateTables.createTrainingLogsTable);
+
     await db.execute(
-      CreateTables.createMovementPerformancesTable,
+      CreateTables.createIndexes,
     );
   }
 
@@ -197,6 +209,65 @@ class DatabaseHelper {
         'CREATE INDEX IF NOT EXISTS '
         'idx_movement_performances_movement '
         'ON movement_performances(movement_id)',
+      );
+    }
+
+    if (oldVersion < 13) {
+      final athleteColumns = await db.rawQuery('PRAGMA table_info(${Tables.athletes})');
+      final athleteNames = athleteColumns.map((e) => e['name']).toSet();
+      if (!athleteNames.contains('health_status')) {
+        await db.execute("ALTER TABLE ${Tables.athletes} ADD COLUMN health_status TEXT NOT NULL DEFAULT 'healthy'");
+      }
+      if (!athleteNames.contains('injury_areas')) {
+        await db.execute('ALTER TABLE ${Tables.athletes} ADD COLUMN injury_areas TEXT');
+      }
+      if (!athleteNames.contains('injury_since')) {
+        await db.execute('ALTER TABLE ${Tables.athletes} ADD COLUMN injury_since TEXT');
+      }
+      if (!athleteNames.contains('recovery_until')) {
+        await db.execute('ALTER TABLE ${Tables.athletes} ADD COLUMN recovery_until TEXT');
+      }
+
+      final movementColumns = await db.rawQuery('PRAGMA table_info(${Tables.movements})');
+      final names = movementColumns.map((e) => e['name']).toSet();
+      if (!names.contains('is_corrective')) {
+        await db.execute('ALTER TABLE ${Tables.movements} ADD COLUMN is_corrective INTEGER NOT NULL DEFAULT 0');
+      }
+      if (!names.contains('injury_areas')) {
+        await db.execute('ALTER TABLE ${Tables.movements} ADD COLUMN injury_areas TEXT');
+      }
+      await db.execute(CreateTables.createAssessmentsTable);
+      await db.execute(CreateTables.createAssessmentItemsTable);
+      await db.execute(CreateTables.createAssessmentResultsTable);
+      await db.execute(CreateTables.createTrainingProgramsTable);
+      await db.execute(CreateTables.createTrainingProgramItemsTable);
+      await db.execute(CreateTables.createAthleteTrainingAssignmentsTable);
+      await db.execute(CreateTables.createTrainingLogsTable);
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_assignment_athlete ON ${Tables.athleteTrainingAssignments}(athlete_id)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_training_logs_athlete ON ${Tables.trainingLogs}(athlete_id)');
+    }
+
+    if (oldVersion < 12) {
+      await db.execute(
+        CreateTables.createSessionOccurrencesTable,
+      );
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS '
+        'idx_session_occurrences_session '
+        'ON session_occurrences(session_id)',
+      );
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS '
+        'idx_session_occurrences_date '
+        'ON session_occurrences(occurrence_date)',
+      );
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS '
+        'idx_session_occurrences_session_date '
+        'ON session_occurrences(session_id, occurrence_date)',
       );
     }
 

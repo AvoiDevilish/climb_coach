@@ -4,7 +4,7 @@ class Tables {
   // ----------------------------
 
   static const databaseName = 'climb_coach.db';
-  static const databaseVersion = 11;
+  static const databaseVersion = 13;
 
   // ----------------------------
   // Athletes
@@ -30,15 +30,21 @@ class Tables {
 
   static const assessments = 'assessments';
 
-  // ----------------------------
-  // Assessment Results
-  // ----------------------------
+  static const assessmentItems = 'assessment_items';
 
   static const assessmentResults = 'assessment_results';
+
+  // Training programs and athlete assignments
+  static const trainingPrograms = 'training_programs';
+  static const trainingProgramItems = 'training_program_items';
+  static const athleteTrainingAssignments = 'athlete_training_assignments';
+  static const trainingLogs = 'training_logs';
 
   // ----------------------------
   // Movements
   // ----------------------------
+  
+  static const movementCategories = 'movement_categories';
 
   static const movements = 'movements';
 
@@ -50,8 +56,9 @@ class Tables {
 
   static const sessions = 'sessions';
 
-  static const sessionMembers = 'session_members';
+  static const sessionOccurrences = 'session_occurrences';
 
+  static const sessionMembers = 'session_members';
 
   // ----------------------------
   // Attendance

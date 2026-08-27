@@ -8,7 +8,7 @@ class MovementSeed {
 
     Movement(
       id: 'dead_hang',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Dead Hang',
       bodyRegion: 'ساعد و انگشتان',
       measurementType: 'time',
@@ -22,7 +22,7 @@ class MovementSeed {
 
     Movement(
       id: 'max_hang',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Max Hang',
       bodyRegion: 'ساعد و انگشتان',
       measurementType: 'time',
@@ -36,7 +36,7 @@ class MovementSeed {
 
     Movement(
       id: 'repeaters',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Repeaters',
       bodyRegion: 'ساعد و انگشتان',
       measurementType: 'reps',
@@ -50,7 +50,7 @@ class MovementSeed {
 
     Movement(
       id: 'campus_ladder',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Campus Ladder',
       bodyRegion: 'بالاتنه',
       measurementType: 'reps',
@@ -65,7 +65,7 @@ class MovementSeed {
 
     Movement(
       id: 'campus_double',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Campus Double Dyno',
       bodyRegion: 'بالاتنه',
       measurementType: 'reps',
@@ -80,7 +80,7 @@ class MovementSeed {
 
     Movement(
       id: 'lock_off_90',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Lock Off 90°',
       bodyRegion: 'بازو و شانه',
       measurementType: 'time',
@@ -94,7 +94,7 @@ class MovementSeed {
 
     Movement(
       id: 'front_lever',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Front Lever',
       bodyRegion: 'بالاتنه و Core',
       measurementType: 'time',
@@ -108,7 +108,7 @@ class MovementSeed {
 
     Movement(
       id: 'one_arm_hang',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'One Arm Hang',
       bodyRegion: 'ساعد و انگشتان',
       measurementType: 'time',
@@ -122,7 +122,7 @@ class MovementSeed {
 
     Movement(
       id: 'pull_over',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Pull Over',
       bodyRegion: 'بالاتنه',
       measurementType: 'reps',
@@ -136,7 +136,7 @@ class MovementSeed {
 
     Movement(
       id: 'campus_max_reach',
-      category: 'climbing',
+      categoryId: 'climbing',
       name: 'Campus Max Reach',
       bodyRegion: 'بالاتنه و Grip',
       measurementType: 'distance',
@@ -154,7 +154,7 @@ class MovementSeed {
 
     Movement(
       id: 'pull_up',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Pull Up',
       bodyRegion: 'پشت و بازو',
       measurementType: 'reps',
@@ -168,7 +168,7 @@ class MovementSeed {
 
     Movement(
       id: 'weighted_pull_up',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Weighted Pull Up',
       bodyRegion: 'پشت و بازو',
       measurementType: 'weight',
@@ -182,7 +182,7 @@ class MovementSeed {
 
     Movement(
       id: 'push_up',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Push Up',
       bodyRegion: 'سینه و بازو',
       measurementType: 'reps',
@@ -196,7 +196,7 @@ class MovementSeed {
 
     Movement(
       id: 'bench_press',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Bench Press',
       bodyRegion: 'سینه',
       measurementType: 'weight',
@@ -210,7 +210,7 @@ class MovementSeed {
 
     Movement(
       id: 'deadlift',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Deadlift',
       bodyRegion: 'کل زنجیره خلفی',
       measurementType: 'weight',
@@ -225,7 +225,7 @@ class MovementSeed {
 
     Movement(
       id: 'barbell_row',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Barbell Row',
       bodyRegion: 'پشت',
       measurementType: 'weight',
@@ -239,7 +239,7 @@ class MovementSeed {
 
     Movement(
       id: 'biceps_curl',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Biceps Curl',
       bodyRegion: 'بازو',
       measurementType: 'weight',
@@ -252,7 +252,7 @@ class MovementSeed {
 
     Movement(
       id: 'overhead_press',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Overhead Press',
       bodyRegion: 'شانه و بازو',
       measurementType: 'weight',
@@ -266,7 +266,7 @@ class MovementSeed {
 
     Movement(
       id: 'barbell_squat',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Barbell Squat',
       bodyRegion: 'پا و لگن',
       measurementType: 'weight',
@@ -280,7 +280,7 @@ class MovementSeed {
 
     Movement(
       id: 'split_squat',
-      category: 'strength',
+      categoryId: 'strength',
       name: 'Split Squat',
       bodyRegion: 'پا و لگن',
       measurementType: 'reps',
@@ -298,7 +298,7 @@ class MovementSeed {
 
     Movement(
       id: 'plank',
-      category: 'core',
+      categoryId: 'core',
       name: 'Plank',
       bodyRegion: 'Core',
       measurementType: 'time',
@@ -312,7 +312,7 @@ class MovementSeed {
 
     Movement(
       id: 'side_plank',
-      category: 'core',
+      categoryId: 'core',
       name: 'Side Plank',
       bodyRegion: 'Core جانبی',
       measurementType: 'time',
@@ -326,7 +326,7 @@ class MovementSeed {
 
     Movement(
       id: 'hollow_body_hold',
-      category: 'core',
+      categoryId: 'core',
       name: 'Hollow Body Hold',
       bodyRegion: 'Core',
       measurementType: 'time',
@@ -340,7 +340,7 @@ class MovementSeed {
 
     Movement(
       id: 'arch_body_hold',
-      category: 'core',
+      categoryId: 'core',
       name: 'Arch Body Hold',
       bodyRegion: 'Core و پشت',
       measurementType: 'time',
@@ -354,7 +354,7 @@ class MovementSeed {
 
     Movement(
       id: 'hanging_knee_raise',
-      category: 'core',
+      categoryId: 'core',
       name: 'Hanging Knee Raise',
       bodyRegion: 'شکم',
       measurementType: 'reps',
@@ -368,7 +368,7 @@ class MovementSeed {
 
     Movement(
       id: 'hanging_leg_raise',
-      category: 'core',
+      categoryId: 'core',
       name: 'Hanging Leg Raise',
       bodyRegion: 'شکم و لگن',
       measurementType: 'reps',
@@ -382,7 +382,7 @@ class MovementSeed {
 
     Movement(
       id: 'l_sit',
-      category: 'core',
+      categoryId: 'core',
       name: 'L-Sit',
       bodyRegion: 'Core و لگن',
       measurementType: 'time',
@@ -396,7 +396,7 @@ class MovementSeed {
 
     Movement(
       id: 'dead_bug',
-      category: 'core',
+      categoryId: 'core',
       name: 'Dead Bug',
       bodyRegion: 'Core',
       measurementType: 'reps',
@@ -414,7 +414,7 @@ class MovementSeed {
 
     Movement(
       id: 'shoulder_flexion',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Shoulder Flexion',
       bodyRegion: 'شانه',
       measurementType: 'angle',
@@ -427,7 +427,7 @@ class MovementSeed {
 
     Movement(
       id: 'shoulder_external_rotation',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Shoulder External Rotation',
       bodyRegion: 'شانه',
       measurementType: 'angle',
@@ -440,7 +440,7 @@ class MovementSeed {
 
     Movement(
       id: 'wrist_extension',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Wrist Extension',
       bodyRegion: 'مچ دست',
       measurementType: 'angle',
@@ -453,7 +453,7 @@ class MovementSeed {
 
     Movement(
       id: 'hip_flexion',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Hip Flexion',
       bodyRegion: 'لگن',
       measurementType: 'angle',
@@ -466,7 +466,7 @@ class MovementSeed {
 
     Movement(
       id: 'ankle_dorsiflexion',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Ankle Dorsiflexion',
       bodyRegion: 'مچ پا',
       measurementType: 'angle',
@@ -479,7 +479,7 @@ class MovementSeed {
 
     Movement(
       id: 'deep_squat_hold',
-      category: 'mobility',
+      categoryId: 'mobility',
       name: 'Deep Squat Hold',
       bodyRegion: 'لگن و مچ پا',
       measurementType: 'time',
@@ -497,7 +497,7 @@ class MovementSeed {
 
     Movement(
       id: 'running_1km',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Running 1 km',
       bodyRegion: 'کل بدن',
       measurementType: 'time',
@@ -510,7 +510,7 @@ class MovementSeed {
 
     Movement(
       id: 'running_3km',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Running 3 km',
       bodyRegion: 'کل بدن',
       measurementType: 'time',
@@ -523,7 +523,7 @@ class MovementSeed {
 
     Movement(
       id: 'running_5km',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Running 5 km',
       bodyRegion: 'کل بدن',
       measurementType: 'time',
@@ -536,7 +536,7 @@ class MovementSeed {
 
     Movement(
       id: 'burpee_test',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Burpee Test',
       bodyRegion: 'کل بدن',
       measurementType: 'reps',
@@ -550,7 +550,7 @@ class MovementSeed {
 
     Movement(
       id: 'jump_rope',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Jump Rope',
       bodyRegion: 'کل بدن',
       measurementType: 'time',
@@ -564,7 +564,7 @@ class MovementSeed {
 
     Movement(
       id: 'step_test',
-      category: 'cardio',
+      categoryId: 'cardio',
       name: 'Step Test',
       bodyRegion: 'پا و سیستم هوازی',
       measurementType: 'time',
@@ -575,6 +575,58 @@ class MovementSeed {
         'Calves',
         'Cardio',
       ],
+    ),
+
+    // ============================================================
+    // Corrective | حرکات اصلاحی
+    // ============================================================
+
+    Movement(
+      id: 'scapular_wall_slide',
+      categoryId: 'corrective',
+      name: 'Scapular Wall Slide',
+      bodyRegion: 'شانه',
+      measurementType: 'reps',
+      measurementUnit: 'rep',
+      primaryMuscles: ['Serratus', 'Shoulders'],
+      isCorrective: true,
+      injuryAreas: ['شانه'],
+    ),
+
+    Movement(
+      id: 'external_rotation_band',
+      categoryId: 'corrective',
+      name: 'Band External Rotation',
+      bodyRegion: 'شانه',
+      measurementType: 'reps',
+      measurementUnit: 'rep',
+      primaryMuscles: ['Rotator Cuff'],
+      isCorrective: true,
+      injuryAreas: ['شانه'],
+    ),
+
+    Movement(
+      id: 'wrist_extension_mobility',
+      categoryId: 'corrective',
+      name: 'Wrist Extension Mobility',
+      bodyRegion: 'مچ دست',
+      measurementType: 'time',
+      measurementUnit: 'sec',
+      primaryMuscles: ['Forearm'],
+      isCorrective: true,
+      injuryAreas: ['مچ دست'],
+    ),
+
+    Movement(
+      id: 'ankle_mobility',
+      categoryId: 'corrective',
+      name: 'Ankle Mobility',
+      bodyRegion: 'مچ پا',
+      measurementType: 'reps',
+      measurementUnit: 'rep',
+      primaryMuscles: ['Calf'],
+      isCorrective: true,
+      injuryAreas: ['مچ پا'],
     ),
   ];
 }

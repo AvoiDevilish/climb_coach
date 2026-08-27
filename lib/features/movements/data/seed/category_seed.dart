@@ -27,6 +27,12 @@ class CategorySeed {
       displayOrder: 4,
     ),
     MovementCategory(
+      id: 'corrective',
+      title: 'حرکات اصلاحی',
+      icon: '🩹',
+      displayOrder: 6,
+    ),
+    MovementCategory(
       id: 'cardio',
       title: 'هوازی',
       icon: '🏃',
